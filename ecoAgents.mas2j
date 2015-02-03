@@ -1,0 +1,10 @@
+MAS ecoAgents {
+	
+	environment: ecoAgents.EcoSystem("")
+	
+	agents:
+		rabbit1 rabbit;
+
+	aslSourcePath:
+		"src/asl";
+}
