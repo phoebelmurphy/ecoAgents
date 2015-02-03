@@ -1,0 +1,104 @@
+\documentclass[11pt,fleqn,twoside]{article}
+
+\usepackage{makeidx}
+\makeindex
+\usepackage{palatino} %or {times} etc
+\usepackage{plain} %bibliography style 
+\usepackage{amsmath} %math fonts - just in case
+\usepackage{amsfonts} %math fonts
+\usepackage{amssymb} %math fonts
+\usepackage{lastpage} %for footer page numbers
+\usepackage{fancyhdr} %header and footer package
+\usepackage{mmpv2} 
+\usepackage{url}
+
+% the following packages are used for citations - You only need to include one. 
+%
+% Use the cite package if you are using the numeric style (e.g. IEEEannot). 
+% Use the natbib package if you are using the author-date style (e.g. authordate2annot). 
+% Only use one of these and comment out the other one. 
+%\usepackage{cite}
+\usepackage{natbib}
+
+\begin{document}
+
+\name{Phoebe Murphy}
+\userid{phm1}
+\projecttitle{A Multi-Agent Ecosystem Simulation Using AgentSpeak and Jason}
+\projecttitlememoir{A Multi-Agent Ecosystem Simulation} %same as the project title or abridged version for page header
+\reporttitle{Outline Project Specification}
+\version{0.1}
+\docstatus{Draft}
+\modulecode{CS39440}
+\degreeschemecode{G600}
+\degreeschemename{Software Engineering}
+\supervisor{Patricia Shaw} % e.g. Neil Taylor
+\supervisorid{phs}
+\wordcount{}
+
+%optional - comment out next line to use current date for the document
+%\documentdate{10th February 2014} 
+\mmp
+
+\setcounter{tocdepth}{3} %set required number of level in table of contents
+
+
+%==============================================================================
+\section{Project description}
+%==============================================================================
+
+In broad terms the goal of this project is to create a simulation of a wildlife ecosystem using the AgentSpeak programming language and specifically the \textit{Jason} framework through the Eclipse plugin provided by the developers of Jason \citep{jason-2014}. The animals present in the ecosystem will be programmed in AgentSpeak and the environment they inhabit (the model) will be written in Java making use of the Jason libraries.
+
+This simulation will have a GUI that will allow users to edit the initial parameters of the simulation and watch the interactions between agents play out through a graphical representation of the system, which will be implemented using a Java library such as Swing. The interactions between agents and other agents, and agents and the environment are the core part of this project from which its interest is derived, and at least two kinds of agents interacting with each other and the environment are vital for this project to be of worth.
+
+The end goal of the project is to create an intuitive and easy to use program that can be used to explore the effects of changes to the environment (such as litter or a drought) on the ecosystem of that environment as a whole. The program will simulate rabbits and foxes and the interactions between them as a minimum, and ideally will simulate a number of other animals which will all interact with each other and the environment. The environment should be complex and varied, and allow for the agents to have a meaningful effect on it: an environment that is essentially just a field of grass where rabbits eat the grass and foxes eat the rabbits would not be as interesting or valuable as a simulation where, for example, rabbits can create burrows beneath the top layer and overfeeding can destroy areas of grass.
+
+
+%==============================================================================
+\section{Proposed tasks}
+%==============================================================================
+The following is a list of the proposed tasks that will be undertaken as part of this project, in no particular order.
+\begin{description}
+	\item[Learning the AgentSpeak language]
+	A key part of this project will be learning to program in AgentSpeak, a language that follows a reactive agent-based paradigm. AgentSpeak has an unusual syntax and paradigm which is very different from any language I have used before apart from Prolog which I have a small amount of experience with.
+	\item[Creation of a basic ecosystem]
+	The initial technical task in this project will be to create a simple grid based ecosystem environment with some resources available to the agents and interactions between the rabbit agents and the fox agents, with the rabbits trying to avoid the foxes and the foxes trying to eat the rabbits. Initially each agent will occupy one grid square at a time, and grid squares will be able to house multiple agents and resources.
+	\item[Iteratively improving the ecosystem]
+	With a basic ecosystem in place the next task will be to add more agents and environmental complexity. A non-exhaustive list of possible features that could be added are as follows:
+	\begin{itemize}
+	\item Multiple layers to the environment to allow the simulation of rabbit warrens underground, fox dens and similar. This could also allow for trees as a resource occupying multiple layers and birds able to fly into the sky to avoid obstacles and escape predators.
+	\item A more sophisticated grid for the environment where each "square" is much smaller in scale than a rabbit or fox agent, which will allow for different sized animals to be modelled more effectively and greater granularity in resources and animal locations.
+	\item A greater variety of agents in the ecosystem. One potential kind of animal that could be simulated is a sheep, which would present an interesting technical challenge in simulating the flocking behaviour. When multiple environmental layers are added then there would also be the potential to add birds to the simulation.
+	\end{itemize}
+	\item[Research into Jason testing] To create a robust set of tests for the AgentSpeak section of the project I will need to research ways of testing the agents. This could involve the use of an existing library or a separate Java environment from the main project designed to exercise the AgentSpeak code.
+	\item[Creation of JUnit tests] As this program will be developed iteratively a good set of unit tests will be vital to allowing effective refactoring, so the creation of unit tests will be an ongoing task throughout the project.
+	\item[Research into existing ecosystem simulations] Many of the problems that will need to be solved as part of this project will have already been described by others so learning from these will be an important part of the research for this project.
+	\item[Research into real-life ecosystems] To make the simulation realistic from a biological point of view the behaviour of the agents will take inspiration from research into the real-world behaviour of the animals being simulated. The environment the agents inhabit will also be as closely based on a real ecosystem as possible within the technical and time limitations.
+	\item[Learn and use Prometheus] There is a UML-like system for documenting agent design called Prometheus which will be used to create diagrams documenting the design of the agents to be used in the final report.
+	\item[Write documentation] A final report detailing the architecture, test strategy and process of the project and an analysis of its educational value and biological accuracy. Other documentation will include a short, non-technical guide to the use of the program and technical documentation which should provide all the information a programmer with knowledge of Jason and Java would need to work with the code. All documentation will be written during the course of the project alongside the code development.
+\end{description}
+
+%==============================================================================
+\section{Project deliverables}
+%==============================================================================
+
+\begin{description}
+	\item[Working software demo] A working piece of software implementing some of the requirements for the interim demonstration.
+	\item[Jason technology review] A short report detailing how Jason will be used in the project, its strengths and weaknesses, and other relevant information.
+	\item[Comprehensive test suite] A set of tests including a suite of unit tests for the Java code, tests for the Jason code, a test table of acceptance tests for the software as a whole.
+	\item[Final report] A key deliverable is the final report which will be a significant piece of writing detailing the project process, architecture and test strategy and discussion of the value of the software from a educational standpoint.
+	\item[Additional documentation] As part of the technical work additional documentation providing technical detail about the design of the software will be created. Another additional piece of documentation will be a non-technical user guide explaining how to use the program and some background about how ecosystems in the real world function.
+	\item[Ecosystem simulation program] A user-friendly piece of software simulating an ecosystem with multiple agents of different kinds and an easy to understand GUI including intuitive controls for the user and graphical representation of the simulation.
+\end{description}
+\nocite{*} % include everything from the bibliography, irrespective of whether it has been referenced.
+
+% the following line is included so that the bibliography is also shown in the table of contents. There is the possibility that this is added to the previous page for the bibliography. To address this, a newline is added so that it appears on the first page for the bibliography. 
+\newpage
+\addcontentsline{toc}{section}{Initial Annotated Bibliography} 
+
+\bibliographystyle{authordate2annot}
+
+\renewcommand{\refname}{Annotated Bibliography}  % if you put text into the final {} on this line, you will get an extra title, e.g. References. This isn't necessary for the outline project specification. 
+\bibliography{mmp} % References file
+
+\end{document}
