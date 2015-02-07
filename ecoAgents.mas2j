@@ -1,6 +1,6 @@
 MAS ecoAgents {
 	
-	environment: ecoAgents.EcoSystem("")
+	environment: ecoAgents.SquareEcoSystem("")
 	
 	agents:
 		rabbit1 rabbit;

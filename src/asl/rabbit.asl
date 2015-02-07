@@ -29,14 +29,22 @@ eaten(grass, 0).
 	!move;
 	!find(X).
 
-+!move : pos(P) & P == l <-
++!move : space(P)  <-
 	.print(P);
-	move(r);
+	move(P);
 	.
-+!move : pos(P) & P == r <-
+/*+!move : space(P) & P == r <-
 	.print(P);
-	move(l);
+	move(p);
 	.
++!move : space(P) & P == u <-
+	.print(P);
+	move(p);
+	.
++!move : space(P) & P == d <-
+	.print(P);
+	move(p);
+	.*/
 	
 +eaten(X, N) : true
 <- .print("ate ", N, " ", X).
