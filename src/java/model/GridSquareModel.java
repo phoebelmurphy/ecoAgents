@@ -3,11 +3,11 @@ package model;
 import java.util.ArrayList;
 import java.util.List;
 
-public class GridSquare {
+public class GridSquareModel {
 	private Coordinates coordinates;
 	private List<Agent> agents;
 	private boolean grass;
-	public GridSquare(Coordinates coordinates) {
+	public GridSquareModel(Coordinates coordinates) {
 		this.coordinates = coordinates;
 		agents = new ArrayList<Agent>();
 		setGrass(true);

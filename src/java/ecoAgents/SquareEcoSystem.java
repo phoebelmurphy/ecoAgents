@@ -9,18 +9,19 @@ import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import view.MainWindow;
 import model.Agent;
 import model.Animal;
 import model.Coordinates;
-import model.Grid;
-import model.GridSquare;
+import model.GridModel;
+import model.GridSquareModel;
 
 public class SquareEcoSystem extends Environment {
 
 	Random random = new Random();
-	Logger logger = Logger.getLogger("env.rabbit");
+	Logger logger = Logger.getLogger("env.logger");
 	int x, y;
-	Grid grid;
+	GridModel grid;
 	Agent rabbits[];
 
 	Agent fox;
@@ -29,11 +30,24 @@ public class SquareEcoSystem extends Environment {
 		logger.setLevel(Level.ALL);
 		x = 5;
 		y = 5;
-		grid = new Grid(x, y, logger);
+		grid = new GridModel(x, y, logger);
 		rabbits = new Agent[2];
 		addRabbits();
 		addFox();
 		updatePercepts();
+		
+//		EventQueue.invokeLater(new Runnable() {
+//			public void run() {
+				try {
+					MainWindow frame = new MainWindow();
+					frame.addSquares(grid);
+					frame.setVisible(true);
+				} catch (Exception e) {
+					e.printStackTrace();
+					logger.log(Level.SEVERE, "window crashed", e);
+				}
+//			}
+//		});
 	}
 
 	/**
@@ -122,7 +136,7 @@ public class SquareEcoSystem extends Environment {
 	private void updateSurroundingPercepts(Agent rabbit) {
 		int rabbitX = rabbit.getCoordinates().getX();
 		int rabbitY = rabbit.getCoordinates().getY();
-		GridSquare up, down, left, right;
+		GridSquareModel up, down, left, right;
 		// these will be set to null by grid if the squares don't exist
 		up = grid.getSquare(rabbitX, rabbitY + 1);
 		down = grid.getSquare(rabbitX, rabbitY - 1);
@@ -140,7 +154,7 @@ public class SquareEcoSystem extends Environment {
 		checkGrass(right, 'r', rabbit);
 	}
 
-	private void checkFox(GridSquare square, char direction, Agent rabbit) {
+	private void checkFox(GridSquareModel square, char direction, Agent rabbit) {
 		if (square != null && square.getAgents().contains(fox)) {
 			logger.logp(Level.INFO, "SquareEcoSystem", "updateFoxPercept",
 					"agent " + rabbit.getName() + " saw a fox! (" + direction + ")");
@@ -149,7 +163,7 @@ public class SquareEcoSystem extends Environment {
 		}
 	}
 	
-	private void checkGrass(GridSquare square, char direction, Agent rabbit){
+	private void checkGrass(GridSquareModel square, char direction, Agent rabbit){
 		if(square!= null && square.isGrass()){
 			logger.logp(Level.INFO, "SquareEcoSystem", "updateFoxPercept",
 					"agent " + rabbit.getName() + " saw grass (" + direction + ")");
@@ -212,7 +226,7 @@ public class SquareEcoSystem extends Environment {
 
 	public boolean eatRabbit(Agent agent) {
 		boolean result = false;
-		GridSquare currentSquare = grid.getSquare(agent.getCoordinates());
+		GridSquareModel currentSquare = grid.getSquare(agent.getCoordinates());
 		List<Agent> squareAgents = currentSquare.getAgents();
 		//eat the first rabbit we find
 		//TODO maybe make this smarter

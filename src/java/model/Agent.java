@@ -1,6 +1,7 @@
 package model;
 
 
+
 public class Agent {
 	private String name;
 	private Coordinates coordinates;
