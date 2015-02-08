@@ -2,11 +2,14 @@ package view;
 
 import java.awt.Color;
 
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import model.GridSquareModel;
+import model.UpdateListener;
+import model.agents.Agent;
 
-public class GridSquareView extends JPanel {
+public class GridSquareView extends JPanel implements UpdateListener {
 	/**
 	 * 
 	 */
@@ -15,13 +18,30 @@ public class GridSquareView extends JPanel {
 	
 	public GridSquareView(GridSquareModel model){
 		this.model=model;
+		model.addUpdateListener(this);
 		setOpaque(true);
+		updateGrass();
+	}
+	
+	private void updateGrass(){
 		if(model.isGrass()){
 			setBackground(Color.GREEN);
 		}
 		else {
 			setBackground(Color.BLACK);
 		}
+	}
+
+	private void updateRabbits() {
+		removeAll();
+		for(Agent agent : model.getAgents()){
+			add(new JLabel(agent.getName()));
+		}
+		validate();
+	}
+	public void modelUpdated() {
+		updateGrass();
+		updateRabbits();
 		repaint();
 	}
 

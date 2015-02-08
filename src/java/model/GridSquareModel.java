@@ -3,11 +3,15 @@ package model;
 import java.util.ArrayList;
 import java.util.List;
 
+import model.agents.Agent;
+
 public class GridSquareModel {
 	private Coordinates coordinates;
 	private List<Agent> agents;
+	private List<UpdateListener> listeners;
 	private boolean grass;
 	public GridSquareModel(Coordinates coordinates) {
+		listeners = new ArrayList<UpdateListener>();
 		this.coordinates = coordinates;
 		agents = new ArrayList<Agent>();
 		setGrass(true);
@@ -22,6 +26,19 @@ public class GridSquareModel {
 	}
 	
 	/**
+	 * Add an UpdateListener to notify when the model is updated
+	 * @param listener The listener to add
+	 */
+	public void addUpdateListener(UpdateListener listener){
+		listeners.add(listener);
+	}
+	
+	private void notifyListeners(){
+		for(UpdateListener listener : listeners) {
+			listener.modelUpdated();
+		}
+	}
+	/**
 	 * Removes all agents with the specified name from the list.
 	 * @param name The name of the agent to remove
 	 * @return The count of agents removed
@@ -35,6 +52,7 @@ public class GridSquareModel {
 				removedCount++;
 			}
 		}
+		notifyListeners();
 		return removedCount;
 	}
 
@@ -44,10 +62,12 @@ public class GridSquareModel {
 
 	public void setGrass(boolean grass) {
 		this.grass = grass;
+		notifyListeners();
 	}
 	
 	public void addAgent(Agent agent){
 		agents.add(agent);
+		notifyListeners();
 	}	
 
 }

@@ -4,6 +4,8 @@ import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import model.agents.Agent;
+
 public class GridModel {
 	// represents a grid, like this
 	//@formatter:off
@@ -72,6 +74,7 @@ public class GridModel {
 
 	public boolean moveAgent(Agent agent, int newx, int newy) {
 		boolean result;
+		wait(agent);
 		if ((newx < 0) || (newy < 0) || (newx >= x) || (newy >= y)) {
 			String message = "can't move. direction (" + newx + "," + newy
 					+ ") from " + agent.getCoordinates().toString();
@@ -89,6 +92,14 @@ public class GridModel {
 		return result;
 	}
 
+	private void wait(Agent agent){
+		try{
+			Thread.sleep(3000/agent.getSpeed());
+		}
+		catch(Exception e){
+			
+		}
+	}
 	/**
 	 * Move the agent in the specified direction, if possible. u for up, d for
 	 * down, l for left and r for right

@@ -10,11 +10,12 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import view.MainWindow;
-import model.Agent;
-import model.Animal;
 import model.Coordinates;
 import model.GridModel;
 import model.GridSquareModel;
+import model.agents.Agent;
+import model.agents.Fox;
+import model.agents.Rabbit;
 
 public class SquareEcoSystem extends Environment {
 
@@ -54,7 +55,7 @@ public class SquareEcoSystem extends Environment {
 	 * Add a fox to the grid
 	 */
 	private void addFox() {
-		fox = new Agent("fox", new Coordinates(1, 2), Animal.FOX);
+		fox = new Fox("fox", new Coordinates(1, 2));
 		grid.getSquare(1, 2).addAgent(fox);
 	}
 
@@ -63,8 +64,7 @@ public class SquareEcoSystem extends Environment {
 	 */
 	private void addRabbits() {
 		for (int i = 0; i < rabbits.length; i++) {
-			rabbits[i] = new Agent("rabbit" + (i + 1), new Coordinates(i, i),
-					Animal.RABBIT);
+			rabbits[i] = new Rabbit("rabbit" + (i + 1), new Coordinates(i, i));
 			grid.getSquare(i, i).addAgent(rabbits[i]);
 		}
 	}
@@ -231,7 +231,7 @@ public class SquareEcoSystem extends Environment {
 		//eat the first rabbit we find
 		//TODO maybe make this smarter
 		for (int i=0; i<squareAgents.size() && !result; i++) {
-			if(squareAgents.get(i).getType() == Animal.RABBIT){
+			if(squareAgents.get(i).prey()){
 				result = true;
 				//TODO work out a way to kill a rabbit when the fox eats it
 			}
