@@ -1,4 +1,4 @@
-package ecoAgents;
+package model;
 
 public class Coordinates {
 	
@@ -26,4 +26,8 @@ public class Coordinates {
 		this.y=y;
 	}
 
+	@Override
+	public String toString(){
+		return "(" + x + "," + y + ")";
+	}
 }

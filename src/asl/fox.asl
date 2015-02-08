@@ -1,9 +1,9 @@
 // Agent sample_agent in project ecoAgents
 
 /* Initial beliefs and rules */
-eaten(grass, 0).
+eaten(rabbit, 0).
 /* Initial goals */
-!eat(grass, 5).
+!eat(rabbit, 5).
 
 /* Plans */
 
@@ -20,7 +20,7 @@ eaten(grass, 0).
 	?eaten(X, N);
 	TotalEaten = N + 1;
 	-+eaten(X, TotalEaten);
-	.
+	.	
 	
 +!find(X) : X <-
 	true.
@@ -29,19 +29,11 @@ eaten(grass, 0).
 	!move;
 	!find(X).
 
-/*if there's grass and no fox, go towards that */
-+!move : space(P) & resource(grass, P)  <-
-	.print("moving to grass ", P);
-	move(P).
-	
-/*never move towards a fox */
-+!move : space(P) <-
-	.print("moving ", P);
-	move(P).
++!move : space(P)  <-
+	.print(P);
+	move(P);
+	.
 
-/*stuck or frozen in terror */
-+!move : true <- 
-	.print("didn't move").
 	
 +eaten(X, N) : true
 <- .print("ate ", N, " ", X).

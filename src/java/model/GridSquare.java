@@ -1,4 +1,4 @@
-package ecoAgents;
+package model;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,6 +46,8 @@ public class GridSquare {
 		this.grass = grass;
 	}
 	
-	
+	public void addAgent(Agent agent){
+		agents.add(agent);
+	}	
 
 }

@@ -1,4 +1,4 @@
-package ecoAgents;
+package model;
 
 public class GridRow {
 	private GridSquare[] squares;

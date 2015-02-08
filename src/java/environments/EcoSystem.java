@@ -1,4 +1,4 @@
-package ecoAgents;
+package environments;
 
 import java.util.Random;
 import java.util.logging.Logger;

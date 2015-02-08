@@ -3,7 +3,12 @@ MAS ecoAgents {
 	environment: ecoAgents.SquareEcoSystem("")
 	
 	agents:
+		//fox;
 		rabbit1 rabbit;
+		rabbit2 rabbit;
+		//rabbit3 rabbit;
+		//rabbit4 rabbit;
+		//rabbit5 rabbit;
 
 	aslSourcePath:
 		"src/asl";
