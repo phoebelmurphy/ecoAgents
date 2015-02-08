@@ -1,4 +1,4 @@
-package environments;
+package ecoAgents;
 
 import jason.asSyntax.Literal;
 import jason.asSyntax.Structure;
