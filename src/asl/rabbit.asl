@@ -3,7 +3,7 @@
 /* Initial beliefs and rules */
 eaten(grass, 0).
 /* Initial goals */
-!eat(grass, 5).
+!eat(grass, 100).
 
 /* Plans */
 

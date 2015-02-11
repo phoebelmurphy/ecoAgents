@@ -33,7 +33,7 @@ public class GridModel {
 		for (int i = 0; i < y; i++) {
 			rows[i] = new GridRowModel(x);
 			for (int n = 0; n < x; n++) {
-				Coordinates coords = new Coordinates(i, n);
+				Coordinates coords = new Coordinates(n,i);
 				GridSquareModel square = new GridSquareModel(coords);
 				rows[i].addSquare(square, n);
 			}
@@ -111,39 +111,17 @@ public class GridModel {
 	 * @return true if the move was successful, otherwise false
 	 */
 	public boolean moveAgent(Agent agent, char direction) {
-		Coordinates directionCoordinates = charToCoordinates(direction);
-		int newX = agent.getCoordinates().getX() + directionCoordinates.getX();
-		int newY = agent.getCoordinates().getY() + directionCoordinates.getY();
+		//create destination coordinates by adding the direction to the
+		//agent's current coordinates
+		Coordinates destination = Coordinates.add(agent.getCoordinates(),
+				Coordinates.charToCoordinates(direction));
 
-		return moveAgent(agent, newX, newY);
+		return moveAgent(agent, destination.getX(), destination.getY());
 	}
 
+	
 	/**
-	 * Converts a char direction indicator to coordinates, for example 'l' would
-	 * be converted to (-1, 0).
-	 * 
-	 * @param direction
-	 *            u, d, l or r
-	 * @return direction as coordinates
-	 */
-	public Coordinates charToCoordinates(char direction) {
-		int dx = 0;
-		int dy = 0;
-		if (direction == 'l') {
-			dx = -1;
-		} else if (direction == 'r') {
-			dx = 1;
-		} else if (direction == 'd') {
-			dy = -1;
-		} else if (direction == 'u') {
-			dy = 1;
-		}
-		return new Coordinates(dx, dy);
-	}
-
-	/**
-	 * Flower gleam and glow Let your magic shine Make there be more grass It is
-	 * growing time Iterates through all the grid squares and randomly adds
+	 * Iterates through all the grid squares and randomly adds
 	 * grass to some. Maybe later grass will spread from one square to the next.
 	 */
 	public void growGrass() {
@@ -152,7 +130,7 @@ public class GridModel {
 			for (int n = 0; n < x; n++) {
 				GridSquareModel currentSquare = currentRow.getSquare(n);
 				if (!currentSquare.isGrass()) {
-					if (random.nextInt(100) < 20) {
+					if (random.nextInt(100) < 5) {
 						currentSquare.setGrass(true);
 					}
 				}

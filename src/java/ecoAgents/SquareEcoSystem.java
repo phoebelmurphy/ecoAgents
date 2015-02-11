@@ -36,9 +36,7 @@ public class SquareEcoSystem extends Environment {
 		addRabbits();
 		addFox();
 		updatePercepts();
-		
-//		EventQueue.invokeLater(new Runnable() {
-//			public void run() {
+
 				try {
 					MainWindow frame = new MainWindow();
 					frame.addSquares(grid);
@@ -47,8 +45,6 @@ public class SquareEcoSystem extends Environment {
 					e.printStackTrace();
 					logger.log(Level.SEVERE, "window crashed", e);
 				}
-//			}
-//		});
 	}
 
 	/**
