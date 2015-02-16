@@ -3,6 +3,7 @@ package model;
 import java.util.ArrayList;
 import java.util.List;
 
+import events.UpdateListener;
 import model.agents.Agent;
 
 public class GridSquareModel {

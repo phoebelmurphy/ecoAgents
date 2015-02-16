@@ -5,8 +5,8 @@ import java.awt.Color;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+import events.UpdateListener;
 import model.GridSquareModel;
-import model.UpdateListener;
 import model.agents.Agent;
 
 public class GridSquareView extends JPanel implements UpdateListener {

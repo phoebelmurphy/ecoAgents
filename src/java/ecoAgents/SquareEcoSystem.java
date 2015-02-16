@@ -5,11 +5,9 @@ import jason.asSyntax.Structure;
 import jason.environment.Environment;
 
 import java.util.List;
-import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import view.MainWindow;
 import model.Coordinates;
 import model.GridModel;
 import model.GridSquareModel;
@@ -19,32 +17,23 @@ import model.agents.Rabbit;
 
 public class SquareEcoSystem extends Environment {
 
-	Random random = new Random();
-	Logger logger = Logger.getLogger("env.logger");
-	int x, y;
-	GridModel grid;
-	Agent rabbits[];
+	private Logger logger = Logger.getLogger("env.logger");
+	private int x, y;
+	private GridModel grid;
+	private Rabbit rabbits[];
 
-	Agent fox;
+	private Fox fox;
 
 	public void init(String[] args) {
 		logger.setLevel(Level.ALL);
 		x = 5;
 		y = 5;
 		grid = new GridModel(x, y, logger);
-		rabbits = new Agent[2];
+		rabbits = new Rabbit[2];
 		addRabbits();
 		addFox();
 		updatePercepts();
 
-				try {
-					MainWindow frame = new MainWindow();
-					frame.addSquares(grid);
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-					logger.log(Level.SEVERE, "window crashed", e);
-				}
 	}
 
 	/**
