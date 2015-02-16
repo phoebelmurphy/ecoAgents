@@ -16,7 +16,10 @@ public class GridRowModel {
 		return squares;
 	}
 	public GridSquareModel getSquare(int position){
+		if(position>=0 && position < length){
 			return squares[position];
+		}
+		return null;
 	}
 	
 	public void addSquare(GridSquareModel square, int position){

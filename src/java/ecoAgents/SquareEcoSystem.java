@@ -63,9 +63,11 @@ public class SquareEcoSystem extends Environment {
 					"agent name " + ag + " is eating");
 			result = eat(ag);
 		} else if (action.getFunctor().equals("move")) {
+			char direction = action.getTerm(0).toString().charAt(0);
 			logger.logp(Level.INFO, "SquareEcoSystem", "updateGrassPercept",
-					"agent name " + ag + " is moving");
-			result = move(ag, action.getTerm(0).toString().charAt(0));
+					"agent name " + ag + " is moving " + direction);
+			
+			result = move(ag, direction);
 		}
 		if (result) {
 			updatePercepts();
@@ -163,8 +165,8 @@ public class SquareEcoSystem extends Environment {
 	 *            the name of the rabbit to find
 	 * @return the rabbit as an agent object or null if the rabbit doesn't exist
 	 */
-	private Agent getRabbit(String agent) {
-		Agent rabbit = null;
+	public Rabbit getRabbit(String agent) {
+		Rabbit rabbit = null;
 		for (int i = 0; i < rabbits.length; i++) {
 			if (rabbits[i].getName().equals(agent)) {
 				rabbit = rabbits[i];
