@@ -10,7 +10,6 @@ import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.swing.JFileChooser;
@@ -102,7 +101,6 @@ public class ButtonListener implements ActionListener {
 		GridModel grid = new GridModel(x, y, logger);
 
 		mainWindow.addSquares(grid);
-		mainWindow.setLauncher(launcher);
 		mainWindow.validate();
 		mainWindow.repaint();
 

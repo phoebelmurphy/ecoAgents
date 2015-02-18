@@ -1,7 +1,5 @@
 package view;
 
-import jason.jeditplugin.MASLauncherInfraTier;
-
 import java.awt.BorderLayout;
 
 import javax.swing.JFrame;
@@ -25,8 +23,6 @@ import javax.swing.JButton;
 
 import events.ButtonListener;
 import javax.swing.JTextField;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
 
 
 
@@ -38,7 +34,6 @@ public class MainWindow extends JFrame {
 	private static final long serialVersionUID = 1L;
 
 	private JPanel gridpane;
-	private MASLauncherInfraTier launcher;
 	private ButtonListener listener;
 	private JTextField textField;
 
@@ -131,10 +126,6 @@ public class MainWindow extends JFrame {
 	public void addSquares(GridModel model){
 		gridpane = new GridView(model);
 		getContentPane().add(gridpane, BorderLayout.CENTER);
-	}
-
-	public void setLauncher(MASLauncherInfraTier launcher) {
-		this.launcher = launcher;
 	}
 	
 	public JTextField getFileField(){
