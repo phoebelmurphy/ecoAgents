@@ -16,16 +16,16 @@ public class GridSquareModelTest {
 	
 	@Before
 	public void setup(){
-		model = new GridSquareModel(new Coordinates(x,y));
-		model.setGrass(false);
-		
+		model = new GridSquareModel(new Coordinates(x,y));		
 	}
 	
 	@Test
 	public void testGrass(){
-		assertFalse(model.isGrass());
-		model.setGrass(true);
-		assertTrue(model.isGrass());
+		int grassHeight = model.getGrassHeight();
+		assertTrue(grassHeight > 0);
+		int grassTaken = model.takeGrass(1);
+		assertEquals(grassHeight - grassTaken, model.getGrassHeight());
+		
 	}
 	
 	@Test

@@ -46,5 +46,8 @@ eaten(grass, 0).
 +!move : true <- 
 	.print("didn't move").
 	
+-!move: true <-
+	!move.
+	
 +eaten(X, N) : true
 <- .print("ate ", N, " ", X).

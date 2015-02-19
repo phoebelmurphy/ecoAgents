@@ -18,7 +18,6 @@ public class GridRowModelTest {
 		model = new GridRowModel(x);
 		for(int i=0; i<x; i++ ){
 			GridSquareModel square = new GridSquareModel(new Coordinates(i,y));
-			square.setGrass(true);
 			model.addSquare(square, i);
 		}
 	}

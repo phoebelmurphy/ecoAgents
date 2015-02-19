@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import controller.ResourceManager;
 import model.Coordinates;
 import model.GridModel;
 import model.GridSquareModel;
@@ -30,13 +31,10 @@ public class SquareEcoSystem extends Environment {
 	public void init(String[] args) {
 		x=5;
 		y=5;
-		logger.setLevel(Level.ALL);
+		logger.setLevel(Level.WARNING);
 		grid = GridModel.getInstance();
-		if (grid==null){
-			GridModel.createInstance(x, y);
-			grid=GridModel.getInstance();
-			//throw new NullPointerException("grid should not be null");
-		}
+		ResourceManager manager = new ResourceManager(grid);
+		new Thread(manager, "resourcemanager").start();
 		rabbits = new Rabbit[2];
 		addRabbits();
 		addFox();
@@ -49,7 +47,7 @@ public class SquareEcoSystem extends Environment {
 	 */
 	private void addFox() {
 		fox = new Fox("fox", new Coordinates(1, 2));
-		grid.getSquare(1, 2).addAgent(fox);
+		grid.addAgent(fox, 1, 2);
 	}
 
 	/**
@@ -58,7 +56,7 @@ public class SquareEcoSystem extends Environment {
 	private void addRabbits() {
 		for (int i = 0; i < rabbits.length; i++) {
 			rabbits[i] = new Rabbit("rabbit" + (i + 1), new Coordinates(i, i));
-			grid.getSquare(i, i).addAgent(rabbits[i]);
+			grid.addAgent(rabbits[i], i, i);
 		}
 	}
 
@@ -84,7 +82,6 @@ public class SquareEcoSystem extends Environment {
 	}
 
 	private void updatePercepts() {
-		grid.growGrass();
 		for (Agent rabbit : rabbits) {
 			clearPercepts(rabbit.getName());
 		}
@@ -208,6 +205,12 @@ public class SquareEcoSystem extends Environment {
 		}
 	}
 
+	/**
+	 * Works out the type of the agent from the name
+	 * TODO change to make rabbits and foxes have different eat actions
+	 * @param agent
+	 * @return
+	 */
 	public boolean eat(String agent) {
 		if (agent.contains("rabbit")) {
 			return eatGrass(agent);
@@ -229,21 +232,35 @@ public class SquareEcoSystem extends Environment {
 			if(squareAgents.get(i).prey()){
 				result = true;
 				//TODO work out a way to kill a rabbit when the fox eats it
+				wait(agent);
 			}
 		}
 		return result;
 	}
 
+	/**
+	 * Waits for the correct amount of time based on the agents speed.
+	 * @param agent
+	 */
+	private void wait(Agent agent){
+		try{
+			Thread.sleep(3000/agent.getSpeed());
+		}
+		catch(Exception e){
+			
+		}
+	}
 	public boolean eatGrass(String agent) {
 		Agent rabbit = getRabbit(agent);
+		wait(rabbit);
 		logger.logp(Level.INFO, "SquareEcoSystem", "eatGrass",
 				"agent " + rabbit.getName() + " is attempting to eat grass at "
 						+ rabbit.getCoordinates());
 		if (grid.getSquare(rabbit.getCoordinates()).isGrass()) {
-			grid.getSquare(rabbit.getCoordinates()).setGrass(false);
+			grid.getSquare(rabbit.getCoordinates()).takeGrass(1);
 			return true;
 		}
-		logger.logp(Level.INFO, "SquareEcoSystem", "eatGrass",
+		logger.logp(Level.WARNING, "SquareEcoSystem", "eatGrass",
 				"failed to eat grass at position: "
 						+ rabbit.getCoordinates().toString());
 		return false;
@@ -277,9 +294,9 @@ public class SquareEcoSystem extends Environment {
 	 */
 	public boolean move(String agentString, char direction) {
 		Agent agent = getAgent(agentString);
-		
+		wait(agent);
 		logger.logp(Level.INFO, "SquareEcoSystem", "executeAction",
-				"direction: " + direction);
+				"agent " + agentString + " moving direction: " + direction);
 		return grid.moveAgent(agent, direction);
 	}
 }
