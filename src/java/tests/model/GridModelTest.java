@@ -1,8 +1,6 @@
 package tests.model;
 import static org.junit.Assert.*;
 
-import java.util.logging.Logger;
-
 import model.Coordinates;
 import model.GridModel;
 import model.GridSquareModel;
@@ -13,14 +11,14 @@ import org.junit.Test;
 public class GridModelTest {
 	
 	private GridModel model;
-	private Logger logger = Logger.getLogger("testlogger");
 	private int x, y;
 	
 	@Before
 	public void setup(){
 		x=5;
 		y=5;
-		model = new GridModel(x, y, logger);
+		GridModel.createInstance(x, y);
+		model = GridModel.getInstance();
 	}
 	
 	@Test

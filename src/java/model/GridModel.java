@@ -4,6 +4,7 @@ import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import ecoAgents.SquareEcoSystem;
 import model.agents.Agent;
 
 public class GridModel {
@@ -23,12 +24,19 @@ public class GridModel {
 	private int y;
 	private GridRowModel[] rows; // list of y GridRows
 	private Random random = new Random();
-	Logger logger;
-
-	public GridModel(int x, int y, Logger logger) {
+	private static Logger logger = Logger.getLogger(SquareEcoSystem.loggerName);
+	private static GridModel instance;
+	
+	public static void createInstance(int x, int y){
+		instance = new GridModel(x,y);
+		logger.logp(Level.INFO, "GridModel", "createInstance", "Grid instance created");
+	}
+	public static GridModel getInstance(){
+		return instance;
+	}
+	private GridModel(int x, int y) {
 		this.x = x;
 		this.y = y;
-		this.logger = logger;
 		rows = new GridRowModel[y];
 		for (int i = 0; i < y; i++) {
 			rows[i] = new GridRowModel(x);

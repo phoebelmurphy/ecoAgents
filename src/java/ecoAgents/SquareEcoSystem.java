@@ -16,19 +16,27 @@ import model.agents.Fox;
 import model.agents.Rabbit;
 
 public class SquareEcoSystem extends Environment {
+	
+	public static final String loggerName = "env.logger";
 
-	private Logger logger = Logger.getLogger("env.logger");
+	private Logger logger = Logger.getLogger(loggerName);
 	private int x, y;
 	private GridModel grid;
 	private Rabbit rabbits[];
+	
 
 	private Fox fox;
 
 	public void init(String[] args) {
+		x=5;
+		y=5;
 		logger.setLevel(Level.ALL);
-		x = 5;
-		y = 5;
-		grid = new GridModel(x, y, logger);
+		grid = GridModel.getInstance();
+		if (grid==null){
+			GridModel.createInstance(x, y);
+			grid=GridModel.getInstance();
+			//throw new NullPointerException("grid should not be null");
+		}
 		rabbits = new Rabbit[2];
 		addRabbits();
 		addFox();

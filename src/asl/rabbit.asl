@@ -22,6 +22,9 @@ eaten(grass, 0).
 	-+eaten(X, TotalEaten);
 	.
 	
+-!eat(X) : true <-
+	!find(X)
+.
 +!find(X) : X <-
 	true.
 	
