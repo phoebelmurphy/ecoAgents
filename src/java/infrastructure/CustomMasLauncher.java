@@ -70,7 +70,7 @@ public class CustomMasLauncher extends CentralisedMASLauncherAnt {
 			// creating this file will stop the MAS, the runner checks for this
 			// file creation
 			File stop = new File(project.getDirectory() + File.separator
-					+ CustomRunMAS.stopMASFileName);
+					+ RunCentralisedMAS.stopMASFileName);
 			stop.createNewFile();
 		} catch (Exception e) {
 			System.err.println("Error stoping RunCentMAS: " + e);
@@ -82,21 +82,11 @@ public class CustomMasLauncher extends CentralisedMASLauncherAnt {
 
 	@Override
 	protected String replaceMarks(String script, boolean debug) {
-//		System.out.println("custom replace");
-//		String newScript = super.replaceMarks(script, debug);
-//		newScript = replace(newScript,
-//				jason.infra.centralised.RunCentralisedMAS.class.getName(),
-//				CustomRunMAS.class.getName());
-//		newScript = replace(newScript,
-//				jason.infra.centralised.RunCentralisedMAS.class.getName(),
-//				CustomRunMAS.class.getName());
-		//System.out.println(newScript);
-		//return newScript;
 		return readAntFile();
 	}
 
 	private String readAntFile() {
-		File file = new File("C:\\Users\\phoebe\\workspace\\ecoAgents\\src\\java\\controller\\antscript.xml");
+		File file = new File("C:\\Users\\phoebe\\workspace\\ecoAgents\\src\\java\\infrastructure\\antscript.xml");
 		FileInputStream fis;
 		String str = null;
 		try {

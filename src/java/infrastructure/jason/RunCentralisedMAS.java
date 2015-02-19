@@ -56,7 +56,7 @@ import javax.swing.JOptionPane;
 /**
  * Runs MASProject using centralised infrastructure.
  */
-public class RunCentralisedMAS {
+public class RunCentralisedMAS implements Runnable {
 
     public final static String       logPropFile     = "logging.properties";
     public final static String       stopMASFileName = ".stop___MAS";
@@ -72,12 +72,27 @@ public class RunCentralisedMAS {
     private CentralisedEnvironment        env         = null;
     private CentralisedExecutionControl   control     = null;
     private Map<String,CentralisedAgArch> ags         = new ConcurrentHashMap<String,CentralisedAgArch>();
-
+    private String args[];
     
-    public RunCentralisedMAS() {
+    public RunCentralisedMAS(String args[]) {
+    	this.args= args;
         runner = this;  
     }
     
+    public void run() {
+		runner = this;
+		
+        runner.init(args);
+        try {
+			runner.create();
+		} catch (JasonException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+        runner.start();
+        runner.waitEnd();
+        runner.finish();
+	}
         
     public int init(String[] args) {
         String projectFileName = null;
@@ -133,13 +148,6 @@ public class RunCentralisedMAS {
             
             project.fixAgentsSrc(urlPrefix);
 
-//            if (MASConsoleGUI.hasConsole()) {
-//                MASConsoleGUI.get().setTitle("MAS Console - " + project.getSocName());
-//
-//                createButtons();
-//            }
-
-            //runner.waitEnd();
             errorCode = 0;
 
         } catch (FileNotFoundException e1) {
@@ -156,9 +164,6 @@ public class RunCentralisedMAS {
         System.out.flush();
         System.err.flush();
 
-//        if (!MASConsoleGUI.hasConsole() && errorCode != 0) {
-//            System.exit(errorCode);
-//        }
         return errorCode;
     }
 

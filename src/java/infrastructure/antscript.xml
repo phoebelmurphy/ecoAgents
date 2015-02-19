@@ -25,7 +25,7 @@
 
     </path>
 
-    <!-- tasks the user can override in his/her c-build.xml script -->
+    <!-- tasks the user can override in their c-build.xml script -->
     <target name="user-init">
     </target>
     <target name="user-end">
@@ -58,7 +58,7 @@
                 <include name="**/*.class" />
             </fileset>
             <manifest>
-                  <attribute name="Main-Class" value="controller.CustomRunMAS"/>
+                  <attribute name="Main-Class" value="infrastructure.jason.RunCentralisedMAS"/>
             </manifest>
         </jar>
         <delete file="default.mas2j" />

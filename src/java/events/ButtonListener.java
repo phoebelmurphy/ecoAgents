@@ -1,11 +1,12 @@
 package events;
 
-import infrastructure.CustomRunMAS;
 
+import infrastructure.jason.RunCentralisedMAS;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+
 
 
 
@@ -59,7 +60,7 @@ public class ButtonListener implements ActionListener {
 		mainWindow.addSquares(grid);
 		mainWindow.validate();
 		mainWindow.repaint();
-		CustomRunMAS mas = new CustomRunMAS(new String[] {fileField.getText()});
+		RunCentralisedMAS mas = new RunCentralisedMAS(new String[] {fileField.getText()});
 		new Thread(mas, "AgentSpeakSystem").start();
 
 	}
