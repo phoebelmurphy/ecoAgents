@@ -12,7 +12,7 @@ public class GridSquareModel {
 	private List<Agent> agents;
 	private List<UpdateListener> listeners;
 	private int grassHeight = 0;
-	private int maxHeight = 10;
+	private int maxHeight = 9;
 	private ReentrantLock lock = new ReentrantLock();
 
 	public GridSquareModel(Coordinates coordinates) {

@@ -22,11 +22,12 @@ public class GridModel {
 	private int x;
 	private int y;
 	private GridRowModel[] rows; // list of y GridRows
-	private static Logger logger = Logger.getLogger(SquareEcoSystem.loggerName);
+	private static Logger logger;
 	private static GridModel instance;
 	
 	public static void createInstance(int x, int y){
 		instance = new GridModel(x,y);
+		logger= Logger.getLogger(SquareEcoSystem.loggerName);
 		logger.logp(Level.INFO, "GridModel", "createInstance", "Grid instance created");
 	}
 	public static GridModel getInstance(){
@@ -125,7 +126,7 @@ public class GridModel {
 	 * @return True if the square is free, otherwise false.
 	 */
 	private boolean checkSquareFree(int newx, int newy){
-		return ((newx > 0) && (newy > 0) && (newx < x) && (newy < y));
+		return ((newx >= 0) && (newy >= 0) && (newx < x) && (newy < y));
 	}
 
 	/**
