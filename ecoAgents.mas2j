@@ -3,7 +3,7 @@ MAS ecoAgents {
 	environment: ecoAgents.SquareEcoSystem("")
 	
 	agents:
-		fox;
+		fox1 fox;
 		rabbit1 rabbit;
 		rabbit2 rabbit;
 		//rabbit3 rabbit;

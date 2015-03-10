@@ -32,6 +32,9 @@ public class GridSquareView extends JPanel implements UpdateListener {
 		for (Agent agent : model.getAgents()) {
 			add(new JLabel(agent.getName()));
 		}
+		for (Agent agent : model.getDeadAgents()) {
+			add(new JLabel(agent.getName()+"dead"));
+		}
 	}
 
 	public void modelUpdated() {

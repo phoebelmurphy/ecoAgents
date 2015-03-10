@@ -1,39 +1,51 @@
 // Agent sample_agent in project ecoAgents
 
 /* Initial beliefs and rules */
-eaten(rabbit, 0).
+
+
 /* Initial goals */
-!eat(rabbit, 5).
+!eat(rabbit).
 
 /* Plans */
 
-+!eat(X, N) : eaten(X, Y) & Y<N <-
-	!eat(X);
-	!eat(X, N).
-
-+!eat(X, N) : eaten(X, Y) & Y>= N <-
-	true.
 	
+/*
+ * the fox hunts its food so to eat it 
+ * needs to hunt first
+ */
 +!eat(X) : true
-<-	!find(X);
-	eat(X);
-	?eaten(X, N);
-	TotalEaten = N + 1;
-	-+eaten(X, TotalEaten);
+<-	!hunt(X);
+	?killed(X, Name);
+	.kill_agent(Name);
+	eatPrey(Name);
+	!eat(X);
 	.	
+
+/*if we can see an X, stalk towards it */
++!hunt(X) : visible(X) <-
+	?visible(X, Name);
+	.print("hunting!!");
+	!stalk(Name).
 	
-+!find(X) : X <-
-	true.
+/*if we don't have any better ideas, look around for X */
++!hunt(X) : not visible(X) <-
+	.print("not hunting!!");
+	look(X);
+	!hunt(X)
+.
+
+
 	
-+!find(X) : true <- 
-	!move;
-	!find(X).
+
++!stalk(Name) : not canPounce(Name) <-
+	moveTowards(Name);
+	!stalk(Name).
+	
+
++!stalk(Name) : canPounce(Name) <-
+	pounce(Name).
 
 +!move : space(P)  <-
-	.print(P);
 	move(P);
 	.
-
 	
-+eaten(X, N) : true
-<- .print("ate ", N, " ", X).

@@ -13,5 +13,17 @@ public class Fox extends Agent {
 	public boolean prey() {
 		return false;
 	}
+	
+	public int eatRabbitSpeed() {
+		return 2;
+	}
+
+	@Override
+	public boolean beAttacked(Agent attacker) {
+		if(getStrength() > attacker.getStrength()){
+			return true;
+		}
+		return false;
+	}
 
 }

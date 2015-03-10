@@ -10,6 +10,7 @@ import model.agents.Agent;
 public class GridSquareModel {
 	private Coordinates coordinates;
 	private List<Agent> agents;
+	private List<Agent> deadAgents;
 	private List<UpdateListener> listeners;
 	private int grassHeight = 0;
 	private int maxHeight = 9;
@@ -19,6 +20,7 @@ public class GridSquareModel {
 		listeners = new ArrayList<UpdateListener>();
 		this.coordinates = coordinates;
 		agents = new ArrayList<Agent>();
+		deadAgents = new ArrayList<Agent>();
 		grassHeight = 5;
 	}
 
@@ -47,6 +49,14 @@ public class GridSquareModel {
 	public List<Agent> getAgents() {
 		return agents;
 	}
+	
+	/**
+	 * Gets all dead agents on this square.
+	 * @return The list of dead agents on this square
+	 */
+	public List<Agent> getDeadAgents() {
+		return deadAgents;
+	}
 
 	/**
 	 * Add an UpdateListener to notify when the model is updated
@@ -68,25 +78,41 @@ public class GridSquareModel {
 	}
 
 	/**
-	 * Removes all agents with the specified name from the list.
+	 * Removes all agents with the specified name from the square.
+	 * You would expect this to be 1 or 0.
 	 * 
 	 * @param name
 	 *            The name of the agent to remove
 	 * @return The count of agents removed
 	 */
 	public int removeAgent(String name) {
-		int removedCount = 0;
-		for (int i = 0; i < agents.size(); i++) {
-			Agent agent = agents.get(i);
-			if (agent.getName().equals(name)) {
-				agents.remove(i);
-				removedCount++;
-			}
-		}
+		int removedCount = removeAgentFromList(agents, name);
 		notifyListeners();
 		return removedCount;
 	}
+	
+	/**
+	 * Removes all dead agents with specified name from the square.
+	 * @param name The name of the agent to remove
+	 * @return The count of agents removed.
+	 */
+	public int removeDeadAgent(String name) {
+		int removedCount = removeAgentFromList(deadAgents, name);
+		return removedCount;
+	}
 
+	private int removeAgentFromList(List<Agent> list, String name){
+		int removedCount = 0;
+		for (int i = 0; i < list.size(); i++) {
+			Agent agent = list.get(i);
+			if (agent.getName().equals(name)) {
+				list.remove(i);
+				removedCount++;
+			}
+		}
+		
+		return removedCount;
+	}
 	/**
 	 * Check if there is visible grass on this square.
 	 * @return true if there is visible grass, otherwise false.

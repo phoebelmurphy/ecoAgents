@@ -1,5 +1,6 @@
 package model;
 
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -88,6 +89,19 @@ public class GridModel {
 	 */
 	public boolean moveAgent(Agent agent, Coordinates newPos) {
 		return moveAgent(agent, newPos.getX(), newPos.getY());
+	}
+	
+	/**
+	 * Change the agents position by the coordinated provided.
+	 * I.e. add the coordinates to the agents position.
+	 * @param agent The agent to move
+	 * @param dx The change in the x coordinate
+	 * @param dy The change in the y coordinate
+	 * @return True if the agent sucessfully moved
+	 */
+	public boolean moveAgentInDirection(Agent agent, int dx, int dy){
+		return moveAgent(agent, agent.getCoordinates().getX()+dx, 
+				agent.getCoordinates().getY()+dy);
 	}
 
 	/**
@@ -196,6 +210,39 @@ public class GridModel {
 				currentSquare.unlock();
 			}
 		}
+	}
+	public boolean moveTowards(Agent hunter, Coordinates preyCoordinates) {
+		boolean result = false;
+		Coordinates difference = Coordinates.subtract(preyCoordinates, hunter.getCoordinates());
+		if(difference.getX()<0) {
+			result = moveAgentInDirection(hunter, -1, 0);
+		}
+		else if(difference.getY()<0) {
+			result = moveAgentInDirection(hunter, 0, -1);
+		}
+		else if(difference.getX()>0) {
+			result = moveAgentInDirection(hunter, 1, 0);
+		}
+		else if(difference.getY()>0) {
+			result = moveAgentInDirection(hunter, 0, 1);
+		}
+		
+		return result;
+	}
+	public Agent findClosest(Agent hunter, String prey) {
+		Agent preyAgent = null;
+		//TODO search closest first
+		for(int a=0; a<x && preyAgent==null; a++) {
+			for(int b=0; b<y && preyAgent==null; b++){
+				List<Agent> agents = getSquare(a,b).getAgents();
+				for(int i=0; i<agents.size(); i++) {
+					if(agents.get(i).getName().contains(prey)){
+						preyAgent = agents.get(i);
+					}
+				}
+			}
+		}
+		return preyAgent;
 	}
 
 }
