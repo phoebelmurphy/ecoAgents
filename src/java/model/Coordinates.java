@@ -76,7 +76,7 @@ public class Coordinates {
 	 * @return A set of coordinates representing the result of the subtraction.
 	 */
 	public static Coordinates subtract(Coordinates first, Coordinates second) {
-		int newX = first.getX() - second.getY();
+		int newX = first.getX() - second.getX();
 		int newY = first.getY() - second.getY();
 		return new Coordinates(newX, newY);
 	}

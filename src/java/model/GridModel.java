@@ -120,6 +120,10 @@ public class GridModel {
 			logger.logp(Level.SEVERE, "Grid", "moveAgent", message);
 			result = false;
 		}
+		else if(!agent.isAlive()) {
+			//dead agents cant move
+			return false;
+		}
 		 else {
 			result = true;
 			GridSquareModel oldSquare = getSquare(agent.getCoordinates());
@@ -127,8 +131,6 @@ public class GridModel {
 			oldSquare.removeAgent(agent.getName());
 			oldSquare.unlock();
 			addAgent(agent, newx, newy);
-			logger.logp(Level.INFO, "Grid", "moveAgent", "moving to position "
-					+ agent.getCoordinates().toString());
 		}
 		return result;
 	}
@@ -158,8 +160,6 @@ public class GridModel {
 		//agent's current coordinates
 		Coordinates destination = Coordinates.add(agent.getCoordinates(),
 				Coordinates.charToCoordinates(direction));
-		logger.log(Level.INFO, "moving agent from " + agent.getCoordinates().toString() + " to " + destination.toString());
-		logger.log(Level.INFO, "directional coordinates are " + Coordinates.charToCoordinates(direction));
 		return moveAgent(agent, destination.getX(), destination.getY());
 	}
 

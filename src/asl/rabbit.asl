@@ -32,12 +32,12 @@ eaten(grass, 0).
 	!move;
 	!find(X).
 
-/*if there's grass and no fox, go towards that */
+/*if there's grass go towards that */
 +!move : space(P) & resource(grass, P)  <-
 	.print("moving to grass ", P);
 	move(P).
 	
-/*never move towards a fox */
+/*otherwise go anywhere */
 +!move : space(P) <-
 	.print("moving ", P);
 	move(P).

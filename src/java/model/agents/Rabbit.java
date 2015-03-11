@@ -64,7 +64,7 @@ public class Rabbit extends Agent {
 			success = false;
 			//this shouldn't happen though
 		}
-		return success;
+		return true;
 	}
 
 }
