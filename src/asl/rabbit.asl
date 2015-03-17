@@ -3,7 +3,7 @@
 /* Initial beliefs and rules */
 eaten(grass, 0).
 /* Initial goals */
-!eat(grass, 100).
+!eat(grass, 10).
 
 /* Plans */
 
@@ -12,7 +12,15 @@ eaten(grass, 0).
 	!eat(X, N).
 
 +!eat(X, N) : eaten(X, Y) & Y>= N <-
-	true.
+	!breed.
+	
++!breed : true <-
+	haveBaby;
+	?babyName(Name);
+	.create_agent(Name, "rabbit.asl");
+	-+eaten(grass, 0);
+	!eat(grass, 10);
+	.
 	
 +!eat(X) : true
 <-	!find(X);

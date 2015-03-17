@@ -229,25 +229,8 @@ public class GridModel {
 		
 		return result;
 	}
+
 	public Agent findClosest(Agent hunter, String prey) {
-		return findClosestPrey(hunter, prey);
-	}
-	
-	private Agent findFirstPrey(Agent hunter, String prey){
-		Agent preyAgent = null;
-		for(int a=0; a<x && preyAgent==null; a++) {
-			for(int b=0; b<y && preyAgent==null; b++){
-				List<Agent> agents = getSquare(a,b).getAgents();
-				for(int i=0; i<agents.size(); i++) {
-					if(agents.get(i).getName().contains(prey)){
-						preyAgent = agents.get(i);
-					}
-				}
-			}
-		}
-		return preyAgent;
-	}
-	private Agent findClosestPrey(Agent hunter, String prey) {
 		//search current square
 		//get adjacent squares
 		//search adjacent squares
@@ -296,6 +279,15 @@ public class GridModel {
 			neighbours.add(right);
 		}
 		return neighbours;
+	}
+	
+	/**
+	 * Adds the agent at the coordinates contained in the agent class.
+	 * @param agent The agent to add
+	 */
+	public void addAgent(Agent agent) {
+		addAgent(agent, agent.getCoordinates());
+		
 	}
 	
 

@@ -4,7 +4,9 @@ import jason.asSyntax.Literal;
 import jason.asSyntax.Structure;
 import jason.environment.Environment;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.locks.ReentrantLock;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -23,9 +25,10 @@ public class SquareEcoSystem extends Environment {
 	private Logger logger = Logger.getLogger(loggerName);
 	private int x, y;
 	private GridModel grid;
-	private Rabbit rabbits[];
-
+	private ArrayList<Rabbit> rabbits;
+	private ReentrantLock rabbitsLock = new ReentrantLock();
 	private Fox foxes[];
+	private int rabbitId = 0;
 
 	public void init(String[] args) {
 		grid = GridModel.getInstance();
@@ -33,7 +36,7 @@ public class SquareEcoSystem extends Environment {
 		y=grid.getY();
 		ResourceManager manager = new ResourceManager(grid);
 		new Thread(manager, "resourcemanager").start();
-		rabbits = new Rabbit[5];
+		rabbits = new ArrayList<Rabbit>();
 		foxes = new Fox[1];
 		addRabbits();
 		addFox();
@@ -56,15 +59,16 @@ public class SquareEcoSystem extends Environment {
 	 * Add rabbits to the grid.
 	 */
 	private void addRabbits() {
-		for (int i = 0; i < rabbits.length; i++) {
-			rabbits[i] = new Rabbit("rabbit" + (i + 1), new Coordinates(i, i));
-			grid.addAgent(rabbits[i], i, i);
+		rabbitsLock.lock();
+		for (int i = 0; i < 5; i++) {
+			rabbitId++;
+			rabbits.add(new Rabbit("rabbit" + (rabbitId), new Coordinates(i, i)));
+			grid.addAgent(rabbits.get(i), i, i);
 		}
+		rabbitsLock.unlock();
 	}
 
 	public boolean executeAction(String ag, Structure action) {
-		logger.logp(Level.INFO, "SquareEcoSystem", "executeAction",
-				"executing action " + action.getFunctor() + " for agent " + ag);
 		boolean result = false;
 		if (action.getFunctor().equals("eat")) {
 			result = eatGrass(ag);
@@ -85,6 +89,9 @@ public class SquareEcoSystem extends Environment {
 			String preyAgent = action.getTerm(0).toString();
 			result = eatPrey(ag, preyAgent);
 		}
+		else if(action.getFunctor().equals("haveBaby")){
+			result = haveBaby(ag);
+		}
 		if (ag.contains("rabbit")) {
 			updateRabbitPercepts();
 		} else {
@@ -92,6 +99,19 @@ public class SquareEcoSystem extends Environment {
 			updateAllFoxes();
 		}
 		return result;
+	}
+
+	private boolean haveBaby(String ag) {
+		rabbitsLock.lock();
+		rabbitId++;
+		Agent parent = getAgent(ag);
+		String newName = "rabbit" + (rabbitId);
+		Rabbit newRabbit = new Rabbit(newName, parent.getCoordinates().clone());
+		parent.setChild(newRabbit);
+		rabbits.add(newRabbit);
+		grid.addAgent(newRabbit);
+		rabbitsLock.unlock();
+		return true;
 	}
 
 	private boolean eatPrey(String ag, String preyAgent) {
@@ -159,15 +179,21 @@ public class SquareEcoSystem extends Environment {
 	 * Updates percepts for all rabbits
 	 */
 	private void updateRabbitPercepts() {
+		rabbitsLock.lock();
 		for (Agent rabbit : rabbits) {
-			clearPercepts(rabbit.getName());
+			updateSingleRabbit(rabbit);
 		}
-		for (int i = 0; i < rabbits.length; i++) {
-			updateGrassPercept(rabbits[i]);
-			updateSurroundingPercepts(rabbits[i]);
-		}
-		for (int i = 0; i < rabbits.length; i++) {
-			updatePositionPercept(rabbits[i]);
+		rabbitsLock.unlock();
+	}
+	
+	private void updateSingleRabbit(Agent rabbit){
+		clearPercepts(rabbit.getName());
+		updateGrassPercept(rabbit);
+		updateSurroundingPercepts(rabbit);
+		updatePositionPercept(rabbit);
+		if(rabbit.getChild() != null) {
+			addPercept(rabbit.getName(), Literal.parseLiteral("babyName(" + rabbit.getChild().getName() + ")"));
+			//rabbit.setChild(null);
 		}
 	}
 
@@ -347,9 +373,9 @@ public class SquareEcoSystem extends Environment {
 	 */
 	public Rabbit getRabbit(String agent) {
 		Rabbit rabbit = null;
-		for (int i = 0; i < rabbits.length; i++) {
-			if (rabbits[i].getName().equals(agent)) {
-				rabbit = rabbits[i];
+		for (int i = 0; i < rabbits.size(); i++) {
+			if (rabbits.get(i).getName().equals(agent)) {
+				rabbit = rabbits.get(i);
 			}
 		}
 		return rabbit;

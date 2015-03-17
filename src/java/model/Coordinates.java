@@ -25,6 +25,13 @@ public class Coordinates {
 	public void setY(int y) {
 		this.y = y;
 	}
+	
+	/**
+	 * @return a copy of this object
+	 */
+	public Coordinates clone() {
+		return new Coordinates(x,y);
+	}
 
 	/**
 	 * Check if the provided coordinates are semantically equal to these

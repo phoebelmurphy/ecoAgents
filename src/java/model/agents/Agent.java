@@ -15,11 +15,13 @@ public abstract class Agent {
 	private ReentrantLock lock = new ReentrantLock();
 	private boolean alive = true;
 	private Agent prey;
+	private Agent child;
 	
 	public Agent(String name, Coordinates coordinates){
 		this.name = name;
 		this.setCoordinates(coordinates);
 		daysOld =0;
+		child = null;
 	}
 	public String getName() {
 		return name;
@@ -88,6 +90,12 @@ public abstract class Agent {
 	
 	public Agent getPrey() {
 		return prey;
+	}
+	public Agent getChild() {
+		return child;
+	}
+	public void setChild(Agent child) {
+		this.child = child;
 	}
 
 
