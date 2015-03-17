@@ -25,19 +25,20 @@ public class SquareEcoSystem extends Environment {
 	private GridModel grid;
 	private Rabbit rabbits[];
 
-	private Fox fox;
+	private Fox foxes[];
 
 	public void init(String[] args) {
-		x = 5;
-		y = 5;
 		grid = GridModel.getInstance();
+		x = grid.getX();
+		y=grid.getY();
 		ResourceManager manager = new ResourceManager(grid);
 		new Thread(manager, "resourcemanager").start();
-		rabbits = new Rabbit[2];
+		rabbits = new Rabbit[5];
+		foxes = new Fox[1];
 		addRabbits();
 		addFox();
 		updateRabbitPercepts();
-		updateFoxPercepts();
+		updateAllFoxes();
 
 	}
 
@@ -45,8 +46,10 @@ public class SquareEcoSystem extends Environment {
 	 * Add a fox to the grid
 	 */
 	private void addFox() {
-		fox = new Fox("fox1", new Coordinates(1, 2));
-		grid.addAgent(fox, 4, 4);
+		for (int i = 0; i < foxes.length; i++) {
+			foxes[i] = new Fox("fox" + (i + 1), new Coordinates(8, 8));
+			grid.addAgent(foxes[i], 6, 3*i);
+		}
 	}
 
 	/**
@@ -86,7 +89,7 @@ public class SquareEcoSystem extends Environment {
 			updateRabbitPercepts();
 		} else {
 			logger.log(Level.INFO, "updating fox percepts");
-			updateFoxPercepts();
+			updateAllFoxes();
 		}
 		return result;
 	}
@@ -113,13 +116,19 @@ public class SquareEcoSystem extends Environment {
 
 	private boolean lookFor(String ag, String prey) {
 		Agent hunter = getAgent(ag);
-		wait(fox, fox.getSpeed());
+		wait(hunter, hunter.getSpeed());
 		Agent preyAgent = grid.findClosest(hunter, prey);
 		hunter.setPrey(preyAgent);
 		return true;
 	}
+	
+	private void updateAllFoxes(){
+		for(Fox fox : foxes) {
+			updateFoxPercepts(fox);
+		}
+	}
 
-	private void updateFoxPercepts() {
+	private void updateFoxPercepts(Fox fox) {
 		clearPercepts(fox.getName());
 		fox.lock();
 		if (fox.getPrey() != null && fox.getPrey().isAlive()) {
@@ -205,10 +214,17 @@ public class SquareEcoSystem extends Environment {
 	}
 
 	private void checkFox(GridSquareModel square, char direction, Agent rabbit) {
-		if (square != null && square.getAgents().contains(fox)) {
-			logger.logp(Level.INFO, "SquareEcoSystem", "updateFoxPercept",
-					"agent " + rabbit.getName() + " saw a fox! (" + direction
-							+ ")");
+		boolean sawFox = false;
+		if(square == null) {
+			return;
+		}
+		List<Agent> agents = square.getAgents();
+		for(Agent agent : agents) {
+			if (agent.getName().contains("fox")){
+				sawFox = true;
+			}
+		}
+		if (sawFox) {
 			addPercept(rabbit.getName(),
 					Literal.parseLiteral("animal(fox, " + direction + ")"));
 		}
@@ -221,22 +237,7 @@ public class SquareEcoSystem extends Environment {
 		}
 	}
 
-	/**
-	 * Finds the rabbit with the specified name if one exists
-	 * 
-	 * @param agent
-	 *            the name of the rabbit to find
-	 * @return the rabbit as an agent object or null if the rabbit doesn't exist
-	 */
-	public Rabbit getRabbit(String agent) {
-		Rabbit rabbit = null;
-		for (int i = 0; i < rabbits.length; i++) {
-			if (rabbits[i].getName().equals(agent)) {
-				rabbit = rabbits[i];
-			}
-		}
-		return rabbit;
-	}
+
 
 	private void updatePositionPercept(Agent agent) {
 		if (agent.getCoordinates().getX() > 0) {
@@ -261,15 +262,17 @@ public class SquareEcoSystem extends Environment {
 	 * @return
 	 */
 	private boolean attack(String agent, String preyName) {
-		Fox ag = fox; // TODO allow for more than one fox!!
+		Fox fox = getFox(agent); // TODO allow for more than one fox!!
+		if(fox == null) {
+			return false;
+		}
 		boolean result = false;
-		GridSquareModel currentSquare = grid.getSquare(ag.getCoordinates());
 		// eat the first rabbit we find? TODO maybe eat slowest rabbit?
 		Agent prey = fox.getPrey();
 		if (prey != null) {
 			prey.lock();
-			boolean success = prey.beAttacked(ag);
-			wait(ag, ag.eatRabbitSpeed());
+			boolean success = prey.beAttacked(fox);
+			wait(fox, fox.eatRabbitSpeed());
 			if (success) {
 				result = true;
 				prey.kill();
@@ -324,13 +327,52 @@ public class SquareEcoSystem extends Environment {
 	 * @return The agent object representation.
 	 */
 	private Agent getAgent(String agent) {
+		Agent foundAgent = null;
 		if (agent.contains("rabbit")) {
-			return getRabbit(agent);
+			foundAgent =  getRabbit(agent);
 		}
-		return fox;
+		else if(agent.contains("fox")) {
+			foundAgent =  getFox(agent);
+		}
+		return foundAgent;
 
 	}
 
+	/**
+	 * Finds the rabbit with the specified name if one exists
+	 * 
+	 * @param agent
+	 *            the name of the rabbit to find
+	 * @return the rabbit object or null if the rabbit doesn't exist
+	 */
+	public Rabbit getRabbit(String agent) {
+		Rabbit rabbit = null;
+		for (int i = 0; i < rabbits.length; i++) {
+			if (rabbits[i].getName().equals(agent)) {
+				rabbit = rabbits[i];
+			}
+		}
+		return rabbit;
+	}
+	
+	/**
+	 * Finds the fox with the specified name if one exists
+	 * 
+	 * @param agent
+	 *            the name of the fox to find
+	 * @return the fox object or null if the fox doesn't exist
+	 */
+	public Fox getFox(String agent) {
+		Fox fox = null;
+		for (int i = 0; i < foxes.length; i++) {
+			if (foxes[i].getName().equals(agent)) {
+				fox = foxes[i];
+			}
+		}
+		return fox;
+	}
+	
+	
 	/**
 	 * Check the agent can move in the specified direction then move it,
 	 * updating the agent's coordinates and the lists of agents on the

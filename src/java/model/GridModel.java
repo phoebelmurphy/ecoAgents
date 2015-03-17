@@ -1,5 +1,6 @@
 package model;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -29,7 +30,6 @@ public class GridModel {
 	public static void createInstance(int x, int y){
 		instance = new GridModel(x,y);
 		logger= Logger.getLogger(SquareEcoSystem.loggerName);
-		logger.logp(Level.INFO, "GridModel", "createInstance", "Grid instance created");
 	}
 	public static GridModel getInstance(){
 		return instance;
@@ -230,8 +230,11 @@ public class GridModel {
 		return result;
 	}
 	public Agent findClosest(Agent hunter, String prey) {
+		return findClosestPrey(hunter, prey);
+	}
+	
+	private Agent findFirstPrey(Agent hunter, String prey){
 		Agent preyAgent = null;
-		//TODO search closest first
 		for(int a=0; a<x && preyAgent==null; a++) {
 			for(int b=0; b<y && preyAgent==null; b++){
 				List<Agent> agents = getSquare(a,b).getAgents();
@@ -244,5 +247,56 @@ public class GridModel {
 		}
 		return preyAgent;
 	}
+	private Agent findClosestPrey(Agent hunter, String prey) {
+		//search current square
+		//get adjacent squares
+		//search adjacent squares
+		//if no success search unsearched adjacent squares
+		ArrayList<GridSquareModel> closed = new ArrayList<GridSquareModel>();
+		ArrayList<GridSquareModel> open = new ArrayList<GridSquareModel>();
+		open.add(getSquare(hunter.getCoordinates()));
+		Agent preyAgent = null;
+		while(preyAgent == null && !open.isEmpty()){
+			GridSquareModel currentSquare = open.remove(0);
+			List<Agent> agents = currentSquare.getAgents();
+			for(int i=0; i<agents.size() && preyAgent ==null; i++) {
+				if(agents.get(i).getName().contains(prey)){
+					preyAgent = agents.get(i);
+				}
+			}
+			if(preyAgent == null){
+				List<GridSquareModel> neighbours = getNeighbours(currentSquare.getCoordinates());
+				closed.add(currentSquare);
+				for(int i=0; i<neighbours.size(); i++){
+					if(!closed.contains(neighbours.get(i))){
+						open.add(neighbours.get(i));
+					}
+				}
+			}
+		}
+		return preyAgent;
+	}
+	
+	private List<GridSquareModel> getNeighbours(Coordinates square){
+		List<GridSquareModel> neighbours = new ArrayList<GridSquareModel>();
+		GridSquareModel up = getSquare(square.getX(), square.getY()-1);
+		if(up != null){
+			neighbours.add(up);
+		}
+		GridSquareModel down = getSquare(square.getX(), square.getY()+1);
+		if(down != null){
+			neighbours.add(down);
+		}
+		GridSquareModel left = getSquare(square.getX()-1, square.getY());
+		if(left != null){
+			neighbours.add(left);
+		}
+		GridSquareModel right = getSquare(square.getX()+1, square.getY());
+		if(right != null){
+			neighbours.add(right);
+		}
+		return neighbours;
+	}
+	
 
 }

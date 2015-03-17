@@ -21,18 +21,15 @@ public class ButtonListener implements ActionListener {
 	private MainWindow mainWindow;
 
 	public ButtonListener(MainWindow frame) {
-		System.out.println("created");
 		mainWindow = frame;
 	}
 
 	public void actionPerformed(ActionEvent e) {
 		if (e.getActionCommand().equals("Run")) {
-			System.out.println("running");
 			run();
 		} else if (e.getActionCommand().equals("Browse")) {
 			browse();
 		}
-		System.out.println("boop");
 	}
 
 	private void browse() {
@@ -54,7 +51,7 @@ public class ButtonListener implements ActionListener {
 			return;
 		}
 		//TODO pull the number from user settings
-		GridModel.createInstance(5, 5);
+		GridModel.createInstance(10,10);
 		GridModel grid= GridModel.getInstance();
 
 		mainWindow.addSquares(grid);

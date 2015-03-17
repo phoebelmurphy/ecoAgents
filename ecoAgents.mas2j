@@ -4,11 +4,12 @@ MAS ecoAgents {
 	
 	agents:
 		fox1 fox;
+		//fox2 fox;
 		rabbit1 rabbit;
 		rabbit2 rabbit;
-		//rabbit3 rabbit;
-		//rabbit4 rabbit;
-		//rabbit5 rabbit;
+		rabbit3 rabbit;
+		rabbit4 rabbit;
+		rabbit5 rabbit;
 
 	aslSourcePath:
 		"src/asl";

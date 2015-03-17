@@ -21,14 +21,14 @@
 	!eat(X);
 	.	
 
-/*if we can see an X, stalk towards it unless we */
-+!hunt(X) : visible(X) & not canPounce(Name) <-
+/*if we can see an X, stalk towards it  */
++!hunt(X) : visible(X) <-
 	?visible(X, Name);
 	.print("hunting!!");
 	!stalk(Name).
 	
 /*if we don't have any better ideas, look around for X */
-+!hunt(X) : not visible(X) <-
++!hunt(X) : true <-
 	.print("not hunting!!");
 	look(X);
 	!hunt(X)
