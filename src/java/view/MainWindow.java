@@ -110,6 +110,7 @@ public class MainWindow extends JFrame {
 		gbc_xSpinner.gridx = 1;
 		gbc_xSpinner.gridy = 3;
 		xSpinner.setValue(10);
+		xSpinner.addChangeListener(listener);
 		controlpane.add(xSpinner, gbc_xSpinner);
 		
 		JLabel lblVerticalSize = new JLabel("Vertical size");
@@ -125,6 +126,7 @@ public class MainWindow extends JFrame {
 		gbc_ySpinner.gridx = 1;
 		gbc_ySpinner.gridy = 4;
 		ySpinner.setValue(10);
+		ySpinner.addChangeListener(listener);
 		controlpane.add(ySpinner, gbc_ySpinner);
 		GridBagConstraints gbc_btnRun = new GridBagConstraints();
 		gbc_btnRun.gridx = 1;
@@ -142,6 +144,9 @@ public class MainWindow extends JFrame {
 	}
 
 	public void addSquares(GridModel model){
+		if(gridpane != null) {
+			this.getContentPane().remove(gridpane);
+		}
 		gridpane = new GridView(model);
 		getContentPane().add(gridpane, BorderLayout.CENTER);
 	}
