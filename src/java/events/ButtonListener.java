@@ -5,15 +5,8 @@ import infrastructure.jason.RunCentralisedMAS;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.File;
 
-
-
-
-
-import javax.swing.JFileChooser;
-import javax.swing.JTextField;
-
+import model.Coordinates;
 import model.GridModel;
 import view.MainWindow;
 
@@ -27,37 +20,27 @@ public class ButtonListener implements ActionListener {
 	public void actionPerformed(ActionEvent e) {
 		if (e.getActionCommand().equals("Run")) {
 			run();
-		} else if (e.getActionCommand().equals("Browse")) {
-			browse();
-		}
-	}
-
-	private void browse() {
-		JFileChooser chooser = new JFileChooser();
-		int returnVal = chooser.showOpenDialog(mainWindow);
-		if (returnVal == JFileChooser.APPROVE_OPTION) {
-			File file = chooser.getSelectedFile();
-			JTextField fileField = mainWindow.getFileField();
-			fileField.setText(file.getPath());
 		}
 	}
 
 	private void run() {
 		
-		JTextField fileField = mainWindow.getFileField();
-		if (fileField == null || fileField.getText().isEmpty()) {
-			// TODO show error
-			System.out.println("no file!");
-			return;
-		}
-		//TODO pull the number from user settings
-		GridModel.createInstance(10,10);
+
+		Coordinates gridsize = mainWindow.getCoordinates();
+		
+		//I am using a singleton as there doesn't seem to be another way to
+		//create the grid model outside of the RunCentralisedMAS
+		//and still let the SquareEcoSystem get it
+		//This is because RunCentralisedMAS automatically launches
+		//the Environment we're using (SquareEcoSystem)
+		GridModel.createInstance(gridsize.getX(), gridsize.getY());
 		GridModel grid= GridModel.getInstance();
 
 		mainWindow.addSquares(grid);
 		mainWindow.validate();
 		mainWindow.repaint();
-		RunCentralisedMAS mas = new RunCentralisedMAS(new String[] {fileField.getText()});
+		//RunCentralisedMAS mas = new RunCentralisedMAS(new String[] {fileField.getText()});
+		RunCentralisedMAS mas = new RunCentralisedMAS(new String[] {"C:\\Users\\phoebe\\workspace\\ecoAgents\\ecoAgents.mas2j"});
 		new Thread(mas, "AgentSpeakSystem").start();
 
 	}

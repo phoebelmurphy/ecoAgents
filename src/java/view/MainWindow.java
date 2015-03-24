@@ -16,13 +16,18 @@ import javax.swing.DefaultComboBoxModel;
 import javax.swing.JMenuBar;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
+import javax.swing.SpinnerNumberModel;
 
+import model.Coordinates;
 import model.GridModel;
 
 import javax.swing.JButton;
 
 import events.ButtonListener;
+
 import javax.swing.JTextField;
+import javax.swing.SwingConstants;
+import javax.swing.JSpinner;
 
 
 
@@ -35,7 +40,8 @@ public class MainWindow extends JFrame {
 
 	private JPanel gridpane;
 	private ButtonListener listener;
-	private JTextField textField;
+	private JSpinner ySpinner;
+	private JSpinner xSpinner;
 
 	/**
 	 * Create the frame.
@@ -52,7 +58,7 @@ public class MainWindow extends JFrame {
 		GridBagLayout gbl_controlpane = new GridBagLayout();
 		gbl_controlpane.columnWidths = new int[]{119, 109, 0};
 		gbl_controlpane.rowHeights = new int[]{25, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
-		gbl_controlpane.columnWeights = new double[]{1.0, 0.0, Double.MIN_VALUE};
+		gbl_controlpane.columnWeights = new double[]{1.0, 1.0, Double.MIN_VALUE};
 		gbl_controlpane.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
 		controlpane.setLayout(gbl_controlpane);
 		
@@ -72,42 +78,54 @@ public class MainWindow extends JFrame {
 		gbc_rabbitcount.gridy = 1;
 		controlpane.add(rabbitcount, gbc_rabbitcount);
 		
-		JLabel lblIncludeFox = new JLabel("Include fox?");
-		GridBagConstraints gbc_lblIncludeFox = new GridBagConstraints();
-		gbc_lblIncludeFox.insets = new Insets(0, 0, 5, 5);
-		gbc_lblIncludeFox.gridx = 0;
-		gbc_lblIncludeFox.gridy = 2;
-		controlpane.add(lblIncludeFox, gbc_lblIncludeFox);
-		
-		JCheckBox includeFoxes = new JCheckBox("");
-		includeFoxes.setSelected(true);
-		GridBagConstraints gbc_includeFoxes = new GridBagConstraints();
-		gbc_includeFoxes.insets = new Insets(0, 0, 5, 0);
-		gbc_includeFoxes.anchor = GridBagConstraints.NORTH;
-		gbc_includeFoxes.gridx = 1;
-		gbc_includeFoxes.gridy = 2;
-		controlpane.add(includeFoxes, gbc_includeFoxes);
-		
 		JButton btnRun = new JButton("Run");
 		btnRun.addActionListener(listener);
 		
-		textField = new JTextField();
-		GridBagConstraints gbc_textField = new GridBagConstraints();
-		gbc_textField.insets = new Insets(0, 0, 5, 5);
-		gbc_textField.fill = GridBagConstraints.HORIZONTAL;
-		gbc_textField.gridx = 0;
-		gbc_textField.gridy = 3;
-		controlpane.add(textField, gbc_textField);
-		textField.setColumns(10);
-		textField.setText("C:\\Users\\phoebe\\workspace\\ecoAgents\\ecoAgents.mas2j");
+		JLabel lblFoxCount = new JLabel("Fox count");
+		GridBagConstraints gbc_lblFoxCount = new GridBagConstraints();
+		gbc_lblFoxCount.insets = new Insets(0, 0, 5, 5);
+		gbc_lblFoxCount.gridx = 0;
+		gbc_lblFoxCount.gridy = 2;
+		controlpane.add(lblFoxCount, gbc_lblFoxCount);
 		
-		JButton btnBrowse = new JButton("Browse");
-		btnBrowse.addActionListener(listener);
-		GridBagConstraints gbc_btnBrowse = new GridBagConstraints();
-		gbc_btnBrowse.insets = new Insets(0, 0, 5, 0);
-		gbc_btnBrowse.gridx = 1;
-		gbc_btnBrowse.gridy = 3;
-		controlpane.add(btnBrowse, gbc_btnBrowse);
+		JComboBox<Integer> foxCount = new JComboBox<Integer>();
+		foxCount.setModel(new DefaultComboBoxModel<Integer>(new Integer[] {1,2,3,4,5}));
+		GridBagConstraints gbc_foxCount = new GridBagConstraints();
+		gbc_foxCount.insets = new Insets(0, 0, 5, 0);
+		gbc_foxCount.fill = GridBagConstraints.HORIZONTAL;
+		gbc_foxCount.gridx = 1;
+		gbc_foxCount.gridy = 2;
+		controlpane.add(foxCount, gbc_foxCount);
+		
+		JLabel xLabel = new JLabel("Horizontal size");
+		GridBagConstraints gbc_xLabel = new GridBagConstraints();
+		gbc_xLabel.insets = new Insets(0, 0, 5, 5);
+		gbc_xLabel.gridx = 0;
+		gbc_xLabel.gridy = 3;
+		controlpane.add(xLabel, gbc_xLabel);
+		
+		xSpinner = new JSpinner(new SpinnerNumberModel());
+		GridBagConstraints gbc_xSpinner = new GridBagConstraints();
+		gbc_xSpinner.insets = new Insets(0, 0, 5, 0);
+		gbc_xSpinner.gridx = 1;
+		gbc_xSpinner.gridy = 3;
+		xSpinner.setValue(10);
+		controlpane.add(xSpinner, gbc_xSpinner);
+		
+		JLabel lblVerticalSize = new JLabel("Vertical size");
+		GridBagConstraints gbc_lblVerticalSize = new GridBagConstraints();
+		gbc_lblVerticalSize.insets = new Insets(0, 0, 5, 5);
+		gbc_lblVerticalSize.gridx = 0;
+		gbc_lblVerticalSize.gridy = 4;
+		controlpane.add(lblVerticalSize, gbc_lblVerticalSize);
+		
+		ySpinner = new JSpinner(new SpinnerNumberModel());
+		GridBagConstraints gbc_ySpinner = new GridBagConstraints();
+		gbc_ySpinner.insets = new Insets(0, 0, 5, 0);
+		gbc_ySpinner.gridx = 1;
+		gbc_ySpinner.gridy = 4;
+		ySpinner.setValue(10);
+		controlpane.add(ySpinner, gbc_ySpinner);
 		GridBagConstraints gbc_btnRun = new GridBagConstraints();
 		gbc_btnRun.gridx = 1;
 		gbc_btnRun.gridy = 20;
@@ -128,7 +146,9 @@ public class MainWindow extends JFrame {
 		getContentPane().add(gridpane, BorderLayout.CENTER);
 	}
 	
-	public JTextField getFileField(){
-		return textField;
+	public Coordinates getCoordinates() {
+		int x = (Integer)xSpinner.getValue();
+		int y = (Integer)ySpinner.getValue();
+		return new Coordinates(x,y);
 	}
 }
