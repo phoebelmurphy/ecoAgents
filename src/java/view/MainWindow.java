@@ -6,6 +6,7 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JCheckBox;
 
+import java.awt.Canvas;
 import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
@@ -38,7 +39,7 @@ public class MainWindow extends JFrame {
 	 */
 	private static final long serialVersionUID = 1L;
 
-	private JPanel gridpane;
+	private Canvas gridpane;
 	private ButtonListener listener;
 	private JSpinner ySpinner;
 	private JSpinner xSpinner;

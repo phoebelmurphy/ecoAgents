@@ -1,11 +1,19 @@
 package view;
 
+import java.awt.Canvas;
+import java.awt.Color;
+import java.awt.Graphics;
 import java.awt.GridBagLayout;
+
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import model.GridModel;
+import model.GridRowModel;
+import model.GridSquareModel;
+import model.agents.Agent;
 
-public class GridView extends JPanel{
+public class GridView extends Canvas {
 	/**
 	 * 
 	 */
@@ -13,40 +21,62 @@ public class GridView extends JPanel{
 	
 	
 	private GridModel model;
-	private GridRowView[] rows;
 
 	public GridView(GridModel model) {
-		GridBagLayout layout = new GridBagLayout();
-		layout.rowWeights = new double[model.getX()];
-		layout.rowHeights = new int[model.getX()];
-		for(int i=0; i<model.getX(); i++){
-			layout.rowWeights[i] = 1.0;
-			layout.rowHeights[i] = 10;
-		}
 
-		layout.columnWeights = new double[model.getY()];
-		layout.columnWidths = new int[model.getY()];
-		
-		for(int i=0; i<model.getY(); i++){
-			layout.columnWeights[i] = 1.0;
-			layout.columnWidths[i] = 10;
-		}
-		
-		setLayout(layout);
 		this.model = model;
-		init();
 	}
 
 	/**
 	 * All the heavy work is done here
 	 */
-	private void init() {
-		rows = new GridRowView[model.getY()];
-		for (int i = 0; i < rows.length; i++) {
-			rows[i] = new GridRowView(model.getRow(i), this, i);
-			rows[i].initialiseSquares();
+	private void init(Graphics graphics) {
+		int numberOfRows = model.getY();
+		int numberOfColumns = model.getX();
+		int width = getWidth();
+		int height = getHeight();
+		int squareWidth = width / numberOfRows;
+		int squareHeight = height / numberOfColumns;
+		for (int i = 0; i < numberOfRows; i++) {
+			GridRowModel row = model.getRow(i);
+			for(int h=0; h<numberOfColumns; h++) {
+				GridSquareModel square = row.getSquare(h);
+				graphics.setColor(GrassColour.getColour(square.getGrassHeight()));
+				graphics.fillRect((i*squareWidth)-1, (h*squareHeight)-1, squareWidth-2, squareHeight-2);
+				
+			}
 		}
 	}
 	
+	public void paint(Graphics graphics)
+	  {
+			init(graphics);
+			validate();
+			repaint();
+	   }
+	
+	public void updateGrass(){
+	
+		//setBackground(GrassColour.getColour(model.getGrassHeight()));
+	}
+
+//	private void updateRabbits() {
+//		removeAll();
+//		for (Agent agent : model.getAgents()) {
+//			add(new JLabel(agent.getName()));
+//		}
+//		for (Agent agent : model.getDeadAgents()) {
+//			add(new JLabel(agent.getName()+"dead"));
+//		}
+//	}
+
+	public void modelUpdated() {
+//		updateGrass();
+//		updateRabbits();
+//		add(new JLabel(model.getCoordinates().toString()));
+//		add(new JLabel("height: " + model.getGrassHeight()));
+//		validate();
+//		repaint();
+	}
 
 }
