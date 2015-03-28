@@ -5,8 +5,6 @@ import infrastructure.jason.RunCentralisedMAS;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -32,6 +30,7 @@ public class ButtonListener implements ActionListener, ChangeListener {
 	public void stateChanged(ChangeEvent arg0) {
 		updateGrid();
 		
+		
 	}
 	
 	private void updateGrid() {
@@ -51,10 +50,7 @@ public class ButtonListener implements ActionListener, ChangeListener {
 	}
 
 	private void run() {
-		
-
-		
-		//RunCentralisedMAS mas = new RunCentralisedMAS(new String[] {fileField.getText()});
+		//TODO :(
 		RunCentralisedMAS mas = new RunCentralisedMAS(new String[] {"C:\\Users\\phoebe\\workspace\\ecoAgents\\ecoAgents.mas2j"});
 		new Thread(mas, "AgentSpeakSystem").start();
 

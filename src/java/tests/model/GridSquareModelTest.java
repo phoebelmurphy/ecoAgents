@@ -3,7 +3,6 @@ package tests.model;
 import static org.junit.Assert.*;
 import model.Coordinates;
 import model.GridSquareModel;
-import model.agents.Rabbit;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -34,17 +33,5 @@ public class GridSquareModelTest {
 		assertTrue(shouldBe.equals(model.getCoordinates()));
 	}
 	
-	@Test
-	public void testUpdates(){
-		TestUpdateListener listener = new TestUpdateListener();
-		model.addUpdateListener(listener);
-		assertFalse(listener.updated());
-		Rabbit testRabbit = new Rabbit("testrabbit", new Coordinates(x,y));
-		model.addAgent(testRabbit);
-		assertTrue(listener.updated());
-		listener.reset();
-		model.removeAgent(testRabbit.getName());
-		assertTrue(listener.updated());
-		
-	}
+	
 }

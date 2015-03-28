@@ -4,9 +4,6 @@ import java.awt.BorderLayout;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
-import javax.swing.JCheckBox;
-
-import java.awt.Canvas;
 import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
@@ -26,8 +23,6 @@ import javax.swing.JButton;
 
 import events.ButtonListener;
 
-import javax.swing.JTextField;
-import javax.swing.SwingConstants;
 import javax.swing.JSpinner;
 
 
@@ -39,7 +34,7 @@ public class MainWindow extends JFrame {
 	 */
 	private static final long serialVersionUID = 1L;
 
-	private Canvas gridpane;
+	private JPanel gridpane;
 	private ButtonListener listener;
 	private JSpinner ySpinner;
 	private JSpinner xSpinner;
