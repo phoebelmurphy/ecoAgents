@@ -1,10 +1,7 @@
 package view;
 
-import java.awt.Canvas;
+import java.awt.Color;
 import java.awt.Graphics;
-
-
-
 
 import javax.swing.JPanel;
 
@@ -12,6 +9,7 @@ import events.UpdateListener;
 import model.GridModel;
 import model.GridRowModel;
 import model.GridSquareModel;
+import model.agents.Agent;
 
 public class GridView extends JPanel implements UpdateListener {
 	/**
@@ -25,7 +23,7 @@ public class GridView extends JPanel implements UpdateListener {
 	private int squareWidth;
 	private int numberOfRows;
 	private int numberOfColumns;
-
+	private boolean initialised = false;
 	public GridView(GridModel model) {
 		this.model = model;
 		//init();
@@ -39,50 +37,39 @@ public class GridView extends JPanel implements UpdateListener {
 		numberOfColumns = model.getX();
 		int width = getWidth();
 		int height = getHeight();
-		squareWidth = width / numberOfRows;
-		squareHeight = height / numberOfColumns;
+		squareWidth = width / numberOfColumns;
+		squareHeight = height / numberOfRows;
 		
 	}
 	
 	@Override
 	public void paintComponent(Graphics graphics)
 	  {
-		init();
+		if(!initialised){
+			init();
+			initialised = true;
+		}
 		removeAll();
-		for (int i = 0; i < numberOfRows; i++) {
-			GridRowModel row = model.getRow(i);
-			for(int h=0; h<numberOfColumns; h++) {
-				GridSquareModel square = row.getSquare(h);
+		for (int y = 0; y < numberOfRows; y++) {
+			for(int x=0; x<numberOfColumns; x++) {
+				GridSquareModel square = model.getSquare(x,y);
 				graphics.setColor(GrassColour.getColour(square.getGrassHeight()));
-				graphics.fillRect((i*squareWidth)-1, (h*squareHeight)-1, squareWidth-2, squareHeight-2);
+				graphics.fillRect((x*squareWidth), (y*squareHeight), squareWidth-1, squareHeight-1);
+				graphics.setColor(Color.BLACK);
+				for(Agent agent : square.getAgents()){
+					graphics.drawString(agent.getName(), x*squareWidth,y*squareHeight);
+				}
 				
 			}
 		}
 			repaint();
 	   }
-	
-	public void updateGrass(){
-	
-		//setBackground(GrassColour.getColour(model.getGrassHeight()));
-	}
 
-//	private void updateRabbits() {
-//		removeAll();
-//		for (Agent agent : model.getAgents()) {
-//			add(new JLabel(agent.getName()));
-//		}
-//		for (Agent agent : model.getDeadAgents()) {
-//			add(new JLabel(agent.getName()+"dead"));
-//		}
-//	}
+
 
 	public void modelUpdated() {
-//		updateGrass();
-//		updateRabbits();
-//		add(new JLabel(model.getCoordinates().toString()));
-//		add(new JLabel("height: " + model.getGrassHeight()));
-//		validate();
-//		repaint();
+		//TODO pobably doesnt even work because of multithreading
+		initialised = false;
 	}
 
 }

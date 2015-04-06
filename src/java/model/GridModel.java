@@ -196,21 +196,7 @@ public class GridModel {
 		newSquare.unlock();
 		return true;
 	}
-	/**
-	 * Iterates through all the grid squares and updates resources.
-	 * Squares are updated in a threadsafe way.
-	 */	
-	public void updateSquares() {
-		for (int i = 0; i < y; i++) {
-			GridRowModel currentRow = rows[i];
-			for (int n = 0; n < x; n++) {
-				GridSquareModel currentSquare = currentRow.getSquare(n);
-				currentSquare.lock();
-				currentSquare.growGrass();
-				currentSquare.unlock();
-			}
-		}
-	}
+
 	public boolean moveTowards(Agent hunter, Coordinates preyCoordinates) {
 		boolean result = false;
 		Coordinates difference = Coordinates.subtract(preyCoordinates, hunter.getCoordinates());

@@ -3,6 +3,8 @@ package controller;
 import java.util.concurrent.locks.ReentrantLock;
 
 import model.GridModel;
+import model.GridRowModel;
+import model.GridSquareModel;
 
 public class ResourceManager implements Runnable {
 
@@ -16,10 +18,25 @@ public class ResourceManager implements Runnable {
 
 	public void run() {
 		boolean interrupt = false;
+		int y = model.getY();
+		int x = model.getX();
 		while (!interrupt) {
-			model.updateSquares();
+			for (int i = 0; i < y; i++) {
+				GridRowModel currentRow = model.getRow(i);
+				for (int n = 0; n < x; n++) {
+					GridSquareModel currentSquare = currentRow.getSquare(n);
+					currentSquare.lock();
+					currentSquare.growGrass();
+					currentSquare.unlock();
+					try {
+						Thread.sleep(10);
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
+				}
+			}
 			try {
-				Thread.sleep(10000);
+				Thread.sleep(100000);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
