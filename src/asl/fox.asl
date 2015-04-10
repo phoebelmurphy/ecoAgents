@@ -25,7 +25,7 @@
 +!hunt(X) : visible(X) <-
 	?visible(X, Name);
 	.print("hunting!!");
-	!stalk(Name).
+	!stalk(Name, X).
 	
 /*if we don't have any better ideas, look around for X */
 +!hunt(X) : true <-
@@ -35,13 +35,16 @@
 .
 	
 
-+!stalk(Name) : not canPounce(Name) <-
++!stalk(Name, X) : not canPounce(Name) <-
 	moveTowards(Name);
-	!stalk(Name).
+	!stalk(Name, X).
 	
 
-+!stalk(Name) : canPounce(Name) <-
++!stalk(Name, X) : canPounce(Name) <-
 	pounce(Name).
+	
+-!stalk(Name, X) : true <-
+	hunt(X).
 
 +!move : space(P)  <-
 	move(P);

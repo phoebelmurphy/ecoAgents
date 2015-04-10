@@ -2,6 +2,7 @@
 
 /* Initial beliefs and rules */
 eaten(grass, 0).
+
 /* Initial goals */
 !eat(grass, 10).
 
@@ -19,10 +20,10 @@ eaten(grass, 0).
 	?babyName(Name);
 	.create_agent(Name, "rabbit.asl");
 	-+eaten(grass, 0);
-	!eat(grass, 10);
+	!eat(grass, 50);
 	.
 	
-+!eat(X) : true
++!eat(X) : not animal(fox, P)
 <-	!find(X);
 	eat(X);
 	?eaten(X, N);
@@ -30,10 +31,22 @@ eaten(grass, 0).
 	-+eaten(X, TotalEaten);
 	.
 	
--!eat(X) : true <-
+-!eat(X) : not animal(fox, P) <-
 	!find(X)
 .
-+!find(X) : X <-
+
++!eat(X) : animal(fox, P) <-
+	!run;
+	!eat(X).
+	
++!run : not animal(fox, P) <-
+	true.
+
++!run : animal(fox, P) <-
+	!move.
+	
+	
++!find(X) : X & not animal(fox, P)<-
 	true.
 	
 +!find(X) : true <- 
@@ -41,17 +54,17 @@ eaten(grass, 0).
 	!find(X).
 
 /*if there's grass go towards that */
-+!move : space(P) & resource(grass, P)  <-
++!move : space(P) & resource(grass, P) & not animal(fox, P) <-
 	.print("moving to grass ", P);
 	move(P).
 	
 /*otherwise go anywhere */
-+!move : space(P) <-
++!move : space(P) & not animal(fox, P)<-
 	.print("moving ", P);
 	move(P).
 
 /*stuck or frozen in terror */
-+!move : true <- 
++!move : not animal(fox, P) <- 
 	.print("didn't move").
 	
 -!move: true <-

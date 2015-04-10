@@ -7,6 +7,7 @@ public class Fox extends Agent {
 	public Fox(String name, Coordinates coordinates) {
 		super(name, coordinates);
 		setSpeed(3);
+		setStrength(5);
 	}
 
 	@Override

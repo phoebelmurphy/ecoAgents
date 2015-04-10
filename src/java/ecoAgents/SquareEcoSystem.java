@@ -180,13 +180,13 @@ public class SquareEcoSystem extends Environment {
 	 */
 	private void updateRabbitPercepts() {
 		rabbitsLock.lock();
-		for (Agent rabbit : rabbits) {
+		for (Rabbit rabbit : rabbits) {
 			updateSingleRabbit(rabbit);
 		}
 		rabbitsLock.unlock();
 	}
 	
-	private void updateSingleRabbit(Agent rabbit){
+	private void updateSingleRabbit(Rabbit rabbit){
 		clearPercepts(rabbit.getName());
 		updateGrassPercept(rabbit);
 		updateSurroundingPercepts(rabbit);
@@ -194,6 +194,9 @@ public class SquareEcoSystem extends Environment {
 		if(rabbit.getChild() != null) {
 			addPercept(rabbit.getName(), Literal.parseLiteral("babyName(" + rabbit.getChild().getName() + ")"));
 			//rabbit.setChild(null);
+		}
+		if(rabbit.shouldMove()){
+			addPercept(rabbit.getName(), Literal.parseLiteral("shouldMove"));
 		}
 	}
 
