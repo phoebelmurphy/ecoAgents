@@ -54,10 +54,10 @@ public class GridView extends JPanel implements UpdateListener {
 			for(int x=0; x<numberOfColumns; x++) {
 				GridSquareModel square = model.getSquare(x,y);
 				graphics.setColor(GrassColour.getColour(square.getGrassHeight()));
-				graphics.fillRect((x*squareWidth), (y*squareHeight), squareWidth-1, squareHeight-1);
+				graphics.fillRect((x*squareWidth)+1, (y*squareHeight)+1, squareWidth, squareHeight);
 				graphics.setColor(Color.BLACK);
 				for(Agent agent : square.getAgents()){
-					graphics.drawString(agent.getName(), x*squareWidth,y*squareHeight);
+					graphics.drawString(agent.getName(), x*squareWidth+20,y*squareHeight+50);
 				}
 				
 			}
