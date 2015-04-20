@@ -1,13 +1,10 @@
 package model.agents;
 
-import java.util.Random;
-
 import model.Coordinates;
 
 
 public class Rabbit extends Agent {
 	
-	private Random random = new Random();
 	public Rabbit(String name, Coordinates coordinates) {
 		super(name, coordinates);
 		setSpeed(5);
@@ -17,6 +14,10 @@ public class Rabbit extends Agent {
 	@Override
 	public boolean prey() {
 		return true;
+	}
+	
+	public int safeDistance() {
+		return 3;
 	}
 	
 	public int grassEatingSpeed(int grassHeight) {

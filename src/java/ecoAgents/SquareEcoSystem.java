@@ -73,8 +73,10 @@ public class SquareEcoSystem extends Environment {
 		if (action.getFunctor().equals("eat")) {
 			result = eatGrass(ag);
 		} else if (action.getFunctor().equals("move")) {
-			char direction = action.getTerm(0).toString().charAt(0);
-			result = move(ag, direction);
+			//char direction = action.getTerm(0).toString().charAt(0);
+			//result = move(ag, direction);
+			result = true;
+			moveRabbit(getRabbit(ag));
 		} else if (action.getFunctor().equals("pounce")) {
 			String victim = action.getTerm(0).toString();
 			result = attack(ag, victim);
@@ -225,20 +227,29 @@ public class SquareEcoSystem extends Environment {
 		int rabbitX = rabbit.getCoordinates().getX();
 		int rabbitY = rabbit.getCoordinates().getY();
 		GridSquareModel up, down, left, right;
+		GridSquareModel up2, down2, left2, right2;
 		// these will be set to null by grid if the squares don't exist
 		up = grid.getSquare(rabbitX, rabbitY + 1);
+		up2 = grid.getSquare(rabbitX, rabbitY + 2);
 		down = grid.getSquare(rabbitX, rabbitY - 1);
+		down2 = grid.getSquare(rabbitX, rabbitY -2);
 		right = grid.getSquare(rabbitX + 1, rabbitY);
+		right2 = grid.getSquare(rabbitX + 2, rabbitY);
 		left = grid.getSquare(rabbitX - 1, rabbitY);
+		left2 = grid.getSquare(rabbitX - 2, rabbitY);
 
 		// TODO better design for this mess
 		checkFox(up, 'u', rabbit);
+		checkFox(up2, 'u', rabbit);
 		checkGrass(up, 'u', rabbit);
 		checkFox(down, 'd', rabbit);
+		checkFox(down2, 'd', rabbit);
 		checkGrass(down, 'd', rabbit);
 		checkFox(left, 'l', rabbit);
+		checkFox(left2, 'l', rabbit);
 		checkGrass(left, 'l', rabbit);
 		checkFox(right, 'r', rabbit);
+		checkFox(right2, 'r', rabbit);
 		checkGrass(right, 'r', rabbit);
 	}
 
@@ -257,6 +268,59 @@ public class SquareEcoSystem extends Environment {
 			addPercept(rabbit.getName(),
 					Literal.parseLiteral("animal(fox, " + direction + ")"));
 		}
+	}
+	
+	private Fox findNearestFox(Agent rabbit){
+		Fox fox = (Fox) grid.findClosest(rabbit, "fox");
+		return fox;
+	}
+	
+	private void moveRabbit(Rabbit rabbit) {
+		Fox fox = findNearestFox(rabbit);
+		int x = rabbit.getCoordinates().getX();
+		int y = rabbit.getCoordinates().getY();
+
+		GridSquareModel bestSquare;
+		if(Coordinates.getDistance(rabbit.getCoordinates(), fox.getCoordinates()) < rabbit.safeDistance() ){
+			//move away from fox
+			//find smallest out of x dif and y dif
+			int dx = x - fox.getCoordinates().getX();
+			int dy = y - fox.getCoordinates().getY();
+			if (Math.abs(dx) >=Math.abs(dy) && dy >=0 && grid.getSquare(x, y-1) != null ){ 
+				bestSquare = grid.getSquare(x, y-1);
+			}
+			else if (Math.abs(dx) >=Math.abs(dy) && dy <=0 && grid.getSquare(x, y+1) != null ){
+				bestSquare = grid.getSquare(x, y+1);
+			}
+			else if (dx >= 0 && grid.getSquare(x-1, y) != null){
+				bestSquare = grid.getSquare(x-1, y);
+			}
+			else if( dx <= 0 && grid.getSquare(x+1, y) != null ){
+				bestSquare = grid.getSquare(x+1, y);
+			}
+			else if (dy >= 0 && grid.getSquare(x, y-1) != null ) {
+				//not moving the most away from the fox but better than nothing
+				bestSquare = grid.getSquare(x, y-1);
+			}
+			else {
+				//might work, or might be null, but there's nothing else to do
+				bestSquare = grid.getSquare(x, y+1);
+			}
+		}
+		else {
+			//its safe so find some grass
+			bestSquare = grid.getSquare(x, y);
+			Coordinates[] directions = new Coordinates[] { new Coordinates(x+1, y), new Coordinates(x, y+1),
+				new Coordinates(x-1, y), new Coordinates(x, y-1)
+			};
+			for(Coordinates direction : directions) {
+				if(bestSquare == null || grid.getSquare(direction).getGrassHeight() > bestSquare.getGrassHeight()){
+					bestSquare = grid.getSquare(direction);
+				}
+			}
+			
+		}
+		grid.moveAgent(rabbit, bestSquare.getCoordinates());
 	}
 
 	private void checkGrass(GridSquareModel square, char direction, Agent rabbit) {

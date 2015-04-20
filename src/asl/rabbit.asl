@@ -3,25 +3,31 @@
 /* Initial beliefs and rules */
 eaten(grass, 0).
 
+
 /* Initial goals */
-!eat(grass, 10).
+!breed.
 
 /* Plans */
 
-+!eat(X, N) : eaten(X, Y) & Y<N <-
+/* +!eat(X, N) : eaten(X, Y) & Y<N <-
 	!eat(X);
 	!eat(X, N).
 
 +!eat(X, N) : eaten(X, Y) & Y>= N <-
-	!breed.
+	!breed.*/
 	
-+!breed : true <-
++!breed : eaten(grass, 5) <-
 	haveBaby;
 	?babyName(Name);
 	.create_agent(Name, "rabbit.asl");
-	-+eaten(grass, 0);
-	!eat(grass, 50);
+	-+eaten(grass, 3);
+	!breed
 	.
+	
++!breed: true <-
+	!eat(grass);
+	!breed.
+	
 	
 +!eat(X) : not animal(fox, P)
 <-	!find(X);
@@ -43,6 +49,9 @@ eaten(grass, 0).
 	true.
 
 +!run : animal(fox, P) <-
+	?eaten(X, N);
+	TotalEaten = N-1;
+	-+eaten(X, TotalEaten);
 	!move.
 	
 	
@@ -51,24 +60,35 @@ eaten(grass, 0).
 	
 +!find(X) : true <- 
 	!move;
+	?eaten(X, N);
+	TotalEaten = N-1;
+	-+eaten(X, TotalEaten);
 	!find(X).
 
 /*if there's grass go towards that */
 +!move : space(P) & resource(grass, P) & not animal(fox, P) <-
-	.print("moving to grass ", P);
+	?eaten(X, N);
+	TotalEaten = N-1;
+	-+eaten(X, TotalEaten);
 	move(P).
 	
 /*otherwise go anywhere */
 +!move : space(P) & not animal(fox, P)<-
-	.print("moving ", P);
+	?eaten(X, N);
+	TotalEaten = N-1;
+	-+eaten(X, TotalEaten);
 	move(P).
 
-/*stuck or frozen in terror */
-+!move : not animal(fox, P) <- 
-	.print("didn't move").
+/*if you can't avoid the fox try anyway */
++!move : space(P) <- 
+	move(P).
+	
++!move : true <-
+	!breed.
 	
 -!move: true <-
+	?eaten(X, N);
+	TotalEaten = N-1;
+	-+eaten(X, TotalEaten);
 	!move.
 	
-+eaten(X, N) : true
-<- .print("ate ", N, " ", X).

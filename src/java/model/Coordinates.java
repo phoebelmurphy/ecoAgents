@@ -122,4 +122,11 @@ public class Coordinates {
 				|| (coordinates.getY() == y && (coordinates.getX() == x - 1 || coordinates
 						.getX() == x + 1));
 	}
+	
+	public static int getDistance(Coordinates origin, Coordinates destination){
+		Coordinates diff = subtract(origin, destination);
+		int x = Math.abs(diff.getX());
+		int y = Math.abs(diff.getY());
+		return x+y;
+	}
 }

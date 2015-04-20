@@ -216,24 +216,24 @@ public class GridModel {
 		return result;
 	}
 
-	public Agent findClosest(Agent hunter, String prey) {
+	public Agent findClosest(Agent seeker, String target) {
 		//search current square
 		//get adjacent squares
 		//search adjacent squares
 		//if no success search unsearched adjacent squares
 		ArrayList<GridSquareModel> closed = new ArrayList<GridSquareModel>();
 		ArrayList<GridSquareModel> open = new ArrayList<GridSquareModel>();
-		open.add(getSquare(hunter.getCoordinates()));
-		Agent preyAgent = null;
-		while(preyAgent == null && !open.isEmpty()){
+		open.add(getSquare(seeker.getCoordinates()));
+		Agent targetAgent = null;
+		while(targetAgent == null && !open.isEmpty()){
 			GridSquareModel currentSquare = open.remove(0);
 			List<Agent> agents = currentSquare.getAgents();
-			for(int i=0; i<agents.size() && preyAgent ==null; i++) {
-				if(agents.get(i).getName().contains(prey)){
-					preyAgent = agents.get(i);
+			for(int i=0; i<agents.size() && targetAgent ==null; i++) {
+				if(agents.get(i).getName().contains(target)){
+					targetAgent = agents.get(i);
 				}
 			}
-			if(preyAgent == null){
+			if(targetAgent == null){
 				List<GridSquareModel> neighbours = getNeighbours(currentSquare.getCoordinates());
 				closed.add(currentSquare);
 				for(int i=0; i<neighbours.size(); i++){
@@ -243,7 +243,7 @@ public class GridModel {
 				}
 			}
 		}
-		return preyAgent;
+		return targetAgent;
 	}
 	
 	private List<GridSquareModel> getNeighbours(Coordinates square){

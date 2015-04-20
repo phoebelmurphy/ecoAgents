@@ -1,7 +1,7 @@
 // Agent sample_agent in project ecoAgents
 
 /* Initial beliefs and rules */
-
+eaten(rabbit, 0).
 
 /* Initial goals */
 !eat(rabbit).
@@ -18,6 +18,9 @@
 	?killed(X, Name);
 	.kill_agent(Name);
 	eatPrey(Name);
+	?eaten(rabbit, Num);
+	Total = Num +1;
+	-+eaten(rabbit, Total);
 	!eat(X);
 	.	
 
@@ -44,9 +47,4 @@
 	pounce(Name).
 	
 -!stalk(Name, X) : true <-
-	hunt(X).
-
-+!move : space(P)  <-
-	move(P);
-	.
-	
+	eat(X).
