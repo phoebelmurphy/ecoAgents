@@ -118,7 +118,7 @@ public class GridSquareModel {
 	 * @return true if there is visible grass, otherwise false.
 	 */
 	public boolean isGrass() {
-		return grassHeight > 4;
+		return grassHeight > 2;
 	}
 
 	/**

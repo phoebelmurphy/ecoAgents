@@ -27,14 +27,16 @@ public class GridModel {
 	private GridRowModel[] rows; // list of y GridRows
 	private static Logger logger;
 	private static GridModel instance;
-	
-	public static void createInstance(int x, int y){
-		instance = new GridModel(x,y);
-		logger= Logger.getLogger(SquareEcoSystem.loggerName);
+
+	public static void createInstance(int x, int y) {
+		instance = new GridModel(x, y);
+		logger = Logger.getLogger(SquareEcoSystem.loggerName);
 	}
-	public static GridModel getInstance(){
+
+	public static GridModel getInstance() {
 		return instance;
 	}
+
 	private GridModel(int x, int y) {
 		this.x = x;
 		this.y = y;
@@ -42,7 +44,7 @@ public class GridModel {
 		for (int i = 0; i < y; i++) {
 			rows[i] = new GridRowModel(x);
 			for (int n = 0; n < x; n++) {
-				Coordinates coords = new Coordinates(n,i);
+				Coordinates coords = new Coordinates(n, i);
 				GridSquareModel square = new GridSquareModel(coords);
 				rows[i].addSquare(square, n);
 			}
@@ -71,8 +73,11 @@ public class GridModel {
 
 	/**
 	 * Get the row of squares at the specified y coordinate
-	 * @param i the y coordinate of the row to get
-	 * @return The row at this coordinate, or null if the coordinate isn't valid.
+	 * 
+	 * @param i
+	 *            the y coordinate of the row to get
+	 * @return The row at this coordinate, or null if the coordinate isn't
+	 *         valid.
 	 */
 	public GridRowModel getRow(int i) {
 		if (i < rows.length) {
@@ -82,35 +87,46 @@ public class GridModel {
 	}
 
 	/**
-	 * Move the agent to the specified square, if possible.
-	 * The agent is moved in a threadsafe way.
-	 * @param agent The agent to move
-	 * @param newPos The coordinates to move to
+	 * Move the agent to the specified square, if possible. The agent is moved
+	 * in a threadsafe way.
+	 * 
+	 * @param agent
+	 *            The agent to move
+	 * @param newPos
+	 *            The coordinates to move to
 	 * @return True if the agent successfully moved
 	 */
 	public boolean moveAgent(Agent agent, Coordinates newPos) {
 		return moveAgent(agent, newPos.getX(), newPos.getY());
 	}
-	
+
 	/**
-	 * Change the agents position by the coordinated provided.
-	 * I.e. add the coordinates to the agents position.
-	 * @param agent The agent to move
-	 * @param dx The change in the x coordinate
-	 * @param dy The change in the y coordinate
+	 * Change the agents position by the coordinated provided. I.e. add the
+	 * coordinates to the agents position.
+	 * 
+	 * @param agent
+	 *            The agent to move
+	 * @param dx
+	 *            The change in the x coordinate
+	 * @param dy
+	 *            The change in the y coordinate
 	 * @return True if the agent sucessfully moved
 	 */
-	public boolean moveAgentInDirection(Agent agent, int dx, int dy){
-		return moveAgent(agent, agent.getCoordinates().getX()+dx, 
-				agent.getCoordinates().getY()+dy);
+	public boolean moveAgentInDirection(Agent agent, int dx, int dy) {
+		return moveAgent(agent, agent.getCoordinates().getX() + dx, agent
+				.getCoordinates().getY() + dy);
 	}
 
 	/**
-	 * Move agent to the specified square, if possible.
-	 * The agent is moved in a threadsafe way.
-	 * @param agent The agent to move
-	 * @param newx The x coordinate to move to
-	 * @param newy The y coordinate to move to
+	 * Move agent to the specified square, if possible. The agent is moved in a
+	 * threadsafe way.
+	 * 
+	 * @param agent
+	 *            The agent to move
+	 * @param newx
+	 *            The x coordinate to move to
+	 * @param newy
+	 *            The y coordinate to move to
 	 * @return True if the agent successfully moved.
 	 */
 	public boolean moveAgent(Agent agent, int newx, int newy) {
@@ -120,12 +136,10 @@ public class GridModel {
 					+ ") from " + agent.getCoordinates().toString();
 			logger.logp(Level.SEVERE, "Grid", "moveAgent", message);
 			result = false;
-		}
-		else if(!agent.isAlive()) {
-			//dead agents cant move
+		} else if (!agent.isAlive()) {
+			// dead agents cant move
 			return false;
-		}
-		 else {
+		} else {
 			result = true;
 			GridSquareModel oldSquare = getSquare(agent.getCoordinates());
 			oldSquare.lock();
@@ -135,21 +149,24 @@ public class GridModel {
 		}
 		return result;
 	}
-	
+
 	/**
 	 * A method to check if a square is free for an agent to move to.
-	 * @param newx The x coordinate of the square to check.
-	 * @param newy The y coordinate of the square to check.
+	 * 
+	 * @param newx
+	 *            The x coordinate of the square to check.
+	 * @param newy
+	 *            The y coordinate of the square to check.
 	 * @return True if the square is free, otherwise false.
 	 */
-	private boolean checkSquareFree(int newx, int newy){
+	private boolean checkSquareFree(int newx, int newy) {
 		return ((newx >= 0) && (newy >= 0) && (newx < x) && (newy < y));
 	}
 
 	/**
 	 * Move the agent in the specified direction, if possible. u for up, d for
-	 * down, l for left and r for right
-	 * The agent is moved in a threadsafe way.
+	 * down, l for left and r for right The agent is moved in a threadsafe way.
+	 * 
 	 * @param agent
 	 *            The agent to move
 	 * @param direction
@@ -157,36 +174,43 @@ public class GridModel {
 	 * @return true if the move was successful, otherwise false
 	 */
 	public boolean moveAgent(Agent agent, char direction) {
-		//create destination coordinates by adding the direction to the
-		//agent's current coordinates
+		// create destination coordinates by adding the direction to the
+		// agent's current coordinates
 		Coordinates destination = Coordinates.add(agent.getCoordinates(),
 				Coordinates.charToCoordinates(direction));
 		return moveAgent(agent, destination.getX(), destination.getY());
 	}
 
 	/**
-	 * Adds an agent to the specified square in a threadsafe way.
-	 * Acts identically to the other addAgent methods but allows
-	 * adding with coordinates for convenience.
-	 * @param agent The agent to add.
-	 * @param destination The coordinates of the square to add to.
+	 * Adds an agent to the specified square in a threadsafe way. Acts
+	 * identically to the other addAgent methods but allows adding with
+	 * coordinates for convenience.
+	 * 
+	 * @param agent
+	 *            The agent to add.
+	 * @param destination
+	 *            The coordinates of the square to add to.
 	 * @return True if the agent was successfully added, or false if not.
 	 */
-	public boolean addAgent(Agent agent, Coordinates destination){
+	public boolean addAgent(Agent agent, Coordinates destination) {
 		return addAgent(agent, destination.getX(), destination.getY());
 	}
-	
+
 	/**
-	 * Adds an agent to the specified square in a threadsafe way.
-	 * Acts identically to the other addAgent methods but allows
-	 * adding with x and y ints for convenience.
-	 * @param agent The agent to add.
-	 * @param x The x coordinate of the square to add to.
-	 * @param y The y coordinate of the square to add to.
+	 * Adds an agent to the specified square in a threadsafe way. Acts
+	 * identically to the other addAgent methods but allows adding with x and y
+	 * ints for convenience.
+	 * 
+	 * @param agent
+	 *            The agent to add.
+	 * @param x
+	 *            The x coordinate of the square to add to.
+	 * @param y
+	 *            The y coordinate of the square to add to.
 	 * @return True if the agent was successfully added or false if not.
 	 */
-	public boolean addAgent(Agent agent, int newx, int newy){
-		if(!checkSquareFree(newx, newy)){
+	public boolean addAgent(Agent agent, int newx, int newy) {
+		if (!checkSquareFree(newx, newy)) {
 			return false;
 		}
 		agent.getCoordinates().setX(newx);
@@ -200,93 +224,98 @@ public class GridModel {
 
 	public boolean moveTowards(Agent hunter, Coordinates preyCoordinates) {
 		boolean result = false;
-		Coordinates difference = Coordinates.subtract(preyCoordinates, hunter.getCoordinates());
-		if(difference.getX()<0) {
+		Coordinates difference = Coordinates.subtract(preyCoordinates,
+				hunter.getCoordinates());
+		if (difference.getX() < 0) {
 			result = moveAgentInDirection(hunter, -1, 0);
-		}
-		else if(difference.getY()<0) {
+		} else if (difference.getY() < 0) {
 			result = moveAgentInDirection(hunter, 0, -1);
-		}
-		else if(difference.getX()>0) {
+		} else if (difference.getX() > 0) {
 			result = moveAgentInDirection(hunter, 1, 0);
-		}
-		else if(difference.getY()>0) {
+		} else if (difference.getY() > 0) {
 			result = moveAgentInDirection(hunter, 0, 1);
 		}
-		
+
 		return result;
 	}
 
 	/**
-	 * Finds the closest agent with the specified string
-	 *  in its name to the seeker's current location.
-	 * As agents will be moving around it could miss one.
-	 * I like to think of this as the target hiding.
-	 * @param seeker The agent doing the searching
-	 * @param target The type of agent being looked for
+	 * Finds the closest agent with the specified string in its name to the
+	 * seeker's current location. As agents will be moving around it could miss
+	 * one. I like to think of this as the target hiding.
+	 * 
+	 * @param seeker
+	 *            The agent doing the searching
+	 * @param target
+	 *            The type of agent being looked for
 	 * @return
 	 */
 	public Agent findClosest(Agent seeker, String target) {
-		//search current square
-		//get adjacent squares
-		//search adjacent squares
-		//if no success search unsearched adjacent squares
-		ArrayList<GridSquareModel> closed = new ArrayList<GridSquareModel>();
+		// search current square
+		// get adjacent squares
+		// search adjacent squares
+		// if no success search unsearched adjacent squares
 		ArrayList<GridSquareModel> open = new ArrayList<GridSquareModel>();
+		boolean[][] closed = new boolean[x][y];
 		open.add(getSquare(seeker.getCoordinates()));
 		Agent targetAgent = null;
-		while(targetAgent == null && !open.isEmpty()){
+		while (targetAgent == null && !open.isEmpty()) {
 			GridSquareModel currentSquare = open.remove(0);
 			currentSquare.lock();
 			List<Agent> agents = currentSquare.getAgents();
-			for(int i=0; i<agents.size() && targetAgent ==null; i++) {
-				if(agents.get(i).getName().contains(target)){
+			for (int i = 0; i < agents.size() && targetAgent == null; i++) {
+				if (agents.get(i).getName().contains(target)) {
 					targetAgent = agents.get(i);
 				}
 			}
 			currentSquare.unlock();
-			if(targetAgent == null){
-				List<GridSquareModel> neighbours = getNeighbours(currentSquare.getCoordinates());
-				closed.add(currentSquare);
-				for(int i=0; i<neighbours.size(); i++){
-					if(!closed.contains(neighbours.get(i))){
-						open.add(neighbours.get(i));
+			if (targetAgent == null) {
+				List<GridSquareModel> neighbours = getNeighbours(currentSquare
+						.getCoordinates());
+				closed[currentSquare.getCoordinates().getX()][currentSquare
+						.getCoordinates().getY()] = true;
+
+				for (GridSquareModel neighbour : neighbours) {
+					if (!(closed[neighbour.getCoordinates().getX()][currentSquare
+							.getCoordinates().getY()])) {
+						open.add(neighbour);
 					}
 				}
 			}
 		}
 		return targetAgent;
 	}
-	
-	private List<GridSquareModel> getNeighbours(Coordinates square){
+
+	private List<GridSquareModel> getNeighbours(Coordinates square) {
 		List<GridSquareModel> neighbours = new ArrayList<GridSquareModel>();
-		GridSquareModel up = getSquare(square.getX(), square.getY()-1);
-		if(up != null){
+		GridSquareModel up = getSquare(square.getX(), square.getY() - 1);
+		if (up != null) {
 			neighbours.add(up);
 		}
-		GridSquareModel down = getSquare(square.getX(), square.getY()+1);
-		if(down != null){
+		GridSquareModel down = getSquare(square.getX(), square.getY() + 1);
+		if (down != null) {
 			neighbours.add(down);
 		}
-		GridSquareModel left = getSquare(square.getX()-1, square.getY());
-		if(left != null){
+		GridSquareModel left = getSquare(square.getX() - 1, square.getY());
+		if (left != null) {
 			neighbours.add(left);
 		}
-		GridSquareModel right = getSquare(square.getX()+1, square.getY());
-		if(right != null){
+		GridSquareModel right = getSquare(square.getX() + 1, square.getY());
+		if (right != null) {
 			neighbours.add(right);
 		}
 		return neighbours;
 	}
-	
+
 	/**
 	 * Adds the agent at the coordinates contained in the agent class.
-	 * @param agent The agent to add
+	 * 
+	 * @param agent
+	 *            The agent to add
 	 */
 	public void addAgent(Agent agent) {
 		addAgent(agent, agent.getCoordinates());
-		
+
 	}
-	
 
 }

@@ -8,13 +8,6 @@ eaten(grass, 0).
 !breed.
 
 /* Plans */
-
-/* +!eat(X, N) : eaten(X, Y) & Y<N <-
-	!eat(X);
-	!eat(X, N).
-
-+!eat(X, N) : eaten(X, Y) & Y>= N <-
-	!breed.*/
 	
 +!breed : eaten(grass, 5) <-
 	haveBaby;
@@ -29,7 +22,7 @@ eaten(grass, 0).
 	!breed.
 	
 	
-+!eat(X) : not animal(fox, P)
++!eat(X) : true
 <-	!find(X);
 	eat(X);
 	?eaten(X, N);
@@ -37,58 +30,22 @@ eaten(grass, 0).
 	-+eaten(X, TotalEaten);
 	.
 	
--!eat(X) : not animal(fox, P) <-
-	!find(X)
-.
-
-+!eat(X) : animal(fox, P) <-
-	!run;
-	!eat(X).
 	
-+!run : not animal(fox, P) <-
-	true.
-
-+!run : animal(fox, P) <-
-	?eaten(X, N);
-	TotalEaten = N-1;
-	-+eaten(X, TotalEaten);
-	!move.
-	
-	
-+!find(X) : X & not animal(fox, P)<-
++!find(X) : X <-
 	true.
 	
 +!find(X) : true <- 
 	!move;
-	?eaten(X, N);
-	TotalEaten = N-1;
-	-+eaten(X, TotalEaten);
 	!find(X).
 
-/*if there's grass go towards that */
-+!move : space(P) & resource(grass, P) & not animal(fox, P) <-
+/* the java code decides the direction */
++!move : true<-
 	?eaten(X, N);
 	TotalEaten = N-1;
 	-+eaten(X, TotalEaten);
-	move(P).
+	move.
 	
-/*otherwise go anywhere */
-+!move : space(P) & not animal(fox, P)<-
-	?eaten(X, N);
-	TotalEaten = N-1;
-	-+eaten(X, TotalEaten);
-	move(P).
-
-/*if you can't avoid the fox try anyway */
-+!move : space(P) <- 
-	move(P).
 	
-+!move : true <-
+-!breed : true <-
 	!breed.
-	
--!move: true <-
-	?eaten(X, N);
-	TotalEaten = N-1;
-	-+eaten(X, TotalEaten);
-	!move.
 	

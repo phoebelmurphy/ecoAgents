@@ -46,5 +46,5 @@ eaten(rabbit, 0).
 +!stalk(Name, X) : canPounce(Name) <-
 	pounce(Name).
 	
--!stalk(Name, X) : true <-
+-!eat( X) : true <-
 	eat(X).

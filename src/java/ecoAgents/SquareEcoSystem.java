@@ -191,7 +191,6 @@ public class SquareEcoSystem extends Environment {
 	private void updateSingleRabbit(Rabbit rabbit) {
 		clearPercepts(rabbit.getName());
 		updateGrassPercept(rabbit);
-		updateSurroundingPercepts(rabbit);
 		updatePositionPercept(rabbit);
 		if (rabbit.getChild() != null) {
 			addPercept(
@@ -199,9 +198,6 @@ public class SquareEcoSystem extends Environment {
 					Literal.parseLiteral("babyName("
 							+ rabbit.getChild().getName() + ")"));
 			// rabbit.setChild(null);
-		}
-		if (rabbit.shouldMove()) {
-			addPercept(rabbit.getName(), Literal.parseLiteral("shouldMove"));
 		}
 	}
 
@@ -220,58 +216,8 @@ public class SquareEcoSystem extends Environment {
 		// TODO look for grass next to current square
 	}
 
-	/**
-	 * Updates fox percepts for a single rabbit.
-	 * 
-	 * @param rabbit
-	 *            The rabbit to update
-	 */
-	private void updateSurroundingPercepts(Agent rabbit) {
-		int rabbitX = rabbit.getCoordinates().getX();
-		int rabbitY = rabbit.getCoordinates().getY();
-		GridSquareModel up, down, left, right;
-		GridSquareModel up2, down2, left2, right2;
-		// these will be set to null by grid if the squares don't exist
-		up = grid.getSquare(rabbitX, rabbitY + 1);
-		up2 = grid.getSquare(rabbitX, rabbitY + 2);
-		down = grid.getSquare(rabbitX, rabbitY - 1);
-		down2 = grid.getSquare(rabbitX, rabbitY - 2);
-		right = grid.getSquare(rabbitX + 1, rabbitY);
-		right2 = grid.getSquare(rabbitX + 2, rabbitY);
-		left = grid.getSquare(rabbitX - 1, rabbitY);
-		left2 = grid.getSquare(rabbitX - 2, rabbitY);
 
-		// TODO better design for this mess
-		checkFox(up, 'u', rabbit);
-		checkFox(up2, 'u', rabbit);
-		checkGrass(up, 'u', rabbit);
-		checkFox(down, 'd', rabbit);
-		checkFox(down2, 'd', rabbit);
-		checkGrass(down, 'd', rabbit);
-		checkFox(left, 'l', rabbit);
-		checkFox(left2, 'l', rabbit);
-		checkGrass(left, 'l', rabbit);
-		checkFox(right, 'r', rabbit);
-		checkFox(right2, 'r', rabbit);
-		checkGrass(right, 'r', rabbit);
-	}
 
-	private void checkFox(GridSquareModel square, char direction, Agent rabbit) {
-		boolean sawFox = false;
-		if (square == null) {
-			return;
-		}
-		List<Agent> agents = square.getAgents();
-		for (Agent agent : agents) {
-			if (agent.getName().contains("fox")) {
-				sawFox = true;
-			}
-		}
-		if (sawFox) {
-			addPercept(rabbit.getName(),
-					Literal.parseLiteral("animal(fox, " + direction + ")"));
-		}
-	}
 
 	private Fox findNearestFox(Agent rabbit) {
 		Fox fox = (Fox) grid.findClosest(rabbit, "fox");
@@ -317,8 +263,11 @@ public class SquareEcoSystem extends Environment {
 			for (Coordinates direction : directions) {
 				next = grid.getSquare(direction);
 				if (next != null
-						&& (bestSquare == null || (next.getGrassHeight() > bestSquare
-								.getGrassHeight()))) {
+						&& (bestSquare == null ||
+						(next.getGrassHeight() > bestSquare.getGrassHeight() &&
+								bestSquare.getAgents().size()>1) ||
+								next.getGrassHeight() - bestSquare.getGrassHeight() > 2
+								)) {
 					bestSquare = grid.getSquare(direction);
 				}
 			}

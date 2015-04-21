@@ -55,10 +55,11 @@ public class GridView extends JPanel implements UpdateListener {
 				graphics.setColor(GrassColour.getColour(square.getGrassHeight()));
 				graphics.fillRect((x*squareWidth)+1, (y*squareHeight)+1, squareWidth, squareHeight);
 				graphics.setColor(Color.BLACK);
+				square.lock();
 				for(Agent agent : square.getAgents()){
 					graphics.drawString(agent.getName(), x*squareWidth+20,y*squareHeight+50);
 				}
-				
+				square.unlock();
 			}
 		}
 			repaint();
