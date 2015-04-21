@@ -50,7 +50,7 @@ public class SquareEcoSystem extends Environment {
 	 */
 	private void addFox() {
 		for (int i = 0; i < foxes.length; i++) {
-			foxes[i] = new Fox("fox" + (i + 1), new Coordinates(8, 8));
+			foxes[i] = new Fox("fox" + (i + 1), new Coordinates(grid.getX(), grid.getY()));
 			grid.addAgent(foxes[i], 6, 3 * i);
 		}
 	}
@@ -276,12 +276,6 @@ public class SquareEcoSystem extends Environment {
 		grid.moveAgent(rabbit, bestSquare.getCoordinates());
 	}
 
-	private void checkGrass(GridSquareModel square, char direction, Agent rabbit) {
-		if (square != null && square.isGrass()) {
-			addPercept(rabbit.getName(),
-					Literal.parseLiteral("resource(grass," + direction + ")"));
-		}
-	}
 
 	private void updatePositionPercept(Agent agent) {
 		if (agent.getCoordinates().getX() > 0) {
@@ -419,20 +413,4 @@ public class SquareEcoSystem extends Environment {
 		return fox;
 	}
 
-	/**
-	 * Check the agent can move in the specified direction then move it,
-	 * updating the agent's coordinates and the lists of agents on the
-	 * appropriate GridSquares.
-	 * 
-	 * @param agentString
-	 *            The name of the agent to move.
-	 * @param direction
-	 *            The direction to move in.
-	 * @return
-	 */
-	private boolean move(String agentString, char direction) {
-		Agent agent = getAgent(agentString);
-		wait(agent, agent.getSpeed());
-		return grid.moveAgent(agent, direction);
-	}
 }
