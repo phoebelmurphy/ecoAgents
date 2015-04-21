@@ -33,7 +33,7 @@ public class SquareEcoSystem extends Environment {
 	public void init(String[] args) {
 		grid = GridModel.getInstance();
 		x = grid.getX();
-		y=grid.getY();
+		y = grid.getY();
 		ResourceManager manager = new ResourceManager(grid);
 		new Thread(manager, "resourcemanager").start();
 		rabbits = new ArrayList<Rabbit>();
@@ -51,7 +51,7 @@ public class SquareEcoSystem extends Environment {
 	private void addFox() {
 		for (int i = 0; i < foxes.length; i++) {
 			foxes[i] = new Fox("fox" + (i + 1), new Coordinates(8, 8));
-			grid.addAgent(foxes[i], 6, 3*i);
+			grid.addAgent(foxes[i], 6, 3 * i);
 		}
 	}
 
@@ -73,8 +73,8 @@ public class SquareEcoSystem extends Environment {
 		if (action.getFunctor().equals("eat")) {
 			result = eatGrass(ag);
 		} else if (action.getFunctor().equals("move")) {
-			//char direction = action.getTerm(0).toString().charAt(0);
-			//result = move(ag, direction);
+			// char direction = action.getTerm(0).toString().charAt(0);
+			// result = move(ag, direction);
 			result = true;
 			moveRabbit(getRabbit(ag));
 		} else if (action.getFunctor().equals("pounce")) {
@@ -90,8 +90,7 @@ public class SquareEcoSystem extends Environment {
 		} else if (action.getFunctor().equals("eatPrey")) {
 			String preyAgent = action.getTerm(0).toString();
 			result = eatPrey(ag, preyAgent);
-		}
-		else if(action.getFunctor().equals("haveBaby")){
+		} else if (action.getFunctor().equals("haveBaby")) {
 			result = haveBaby(ag);
 		}
 		if (ag.contains("rabbit")) {
@@ -143,9 +142,9 @@ public class SquareEcoSystem extends Environment {
 		hunter.setPrey(preyAgent);
 		return true;
 	}
-	
-	private void updateAllFoxes(){
-		for(Fox fox : foxes) {
+
+	private void updateAllFoxes() {
+		for (Fox fox : foxes) {
 			updateFoxPercepts(fox);
 		}
 	}
@@ -160,8 +159,9 @@ public class SquareEcoSystem extends Environment {
 			logger.log(Level.INFO, "adding percept " + percept);
 		}
 		if (fox.getPrey() != null
-				&& fox.getPrey().getCoordinates()
-						.adjacentTo(fox.getCoordinates())
+				&& (fox.getPrey().getCoordinates()
+						.adjacentTo(fox.getCoordinates()) || fox.getPrey()
+						.getCoordinates().equals(fox.getCoordinates()))
 				&& fox.getPrey().isAlive()) {
 			addPercept(
 					fox.getName(),
@@ -187,17 +187,20 @@ public class SquareEcoSystem extends Environment {
 		}
 		rabbitsLock.unlock();
 	}
-	
-	private void updateSingleRabbit(Rabbit rabbit){
+
+	private void updateSingleRabbit(Rabbit rabbit) {
 		clearPercepts(rabbit.getName());
 		updateGrassPercept(rabbit);
 		updateSurroundingPercepts(rabbit);
 		updatePositionPercept(rabbit);
-		if(rabbit.getChild() != null) {
-			addPercept(rabbit.getName(), Literal.parseLiteral("babyName(" + rabbit.getChild().getName() + ")"));
-			//rabbit.setChild(null);
+		if (rabbit.getChild() != null) {
+			addPercept(
+					rabbit.getName(),
+					Literal.parseLiteral("babyName("
+							+ rabbit.getChild().getName() + ")"));
+			// rabbit.setChild(null);
 		}
-		if(rabbit.shouldMove()){
+		if (rabbit.shouldMove()) {
 			addPercept(rabbit.getName(), Literal.parseLiteral("shouldMove"));
 		}
 	}
@@ -232,7 +235,7 @@ public class SquareEcoSystem extends Environment {
 		up = grid.getSquare(rabbitX, rabbitY + 1);
 		up2 = grid.getSquare(rabbitX, rabbitY + 2);
 		down = grid.getSquare(rabbitX, rabbitY - 1);
-		down2 = grid.getSquare(rabbitX, rabbitY -2);
+		down2 = grid.getSquare(rabbitX, rabbitY - 2);
 		right = grid.getSquare(rabbitX + 1, rabbitY);
 		right2 = grid.getSquare(rabbitX + 2, rabbitY);
 		left = grid.getSquare(rabbitX - 1, rabbitY);
@@ -255,12 +258,12 @@ public class SquareEcoSystem extends Environment {
 
 	private void checkFox(GridSquareModel square, char direction, Agent rabbit) {
 		boolean sawFox = false;
-		if(square == null) {
+		if (square == null) {
 			return;
 		}
 		List<Agent> agents = square.getAgents();
-		for(Agent agent : agents) {
-			if (agent.getName().contains("fox")){
+		for (Agent agent : agents) {
+			if (agent.getName().contains("fox")) {
 				sawFox = true;
 			}
 		}
@@ -269,56 +272,57 @@ public class SquareEcoSystem extends Environment {
 					Literal.parseLiteral("animal(fox, " + direction + ")"));
 		}
 	}
-	
-	private Fox findNearestFox(Agent rabbit){
+
+	private Fox findNearestFox(Agent rabbit) {
 		Fox fox = (Fox) grid.findClosest(rabbit, "fox");
 		return fox;
 	}
-	
+
 	private void moveRabbit(Rabbit rabbit) {
 		Fox fox = findNearestFox(rabbit);
 		int x = rabbit.getCoordinates().getX();
 		int y = rabbit.getCoordinates().getY();
 
 		GridSquareModel bestSquare;
-		if(Coordinates.getDistance(rabbit.getCoordinates(), fox.getCoordinates()) < rabbit.safeDistance() ){
-			//move away from fox
-			//find smallest out of x dif and y dif
+		if (fox != null && (Coordinates.getDistance(rabbit.getCoordinates(),
+				fox.getCoordinates()) < rabbit.safeDistance())) {
+			// move away from fox
+			// find smallest out of x dif and y dif
 			int dx = x - fox.getCoordinates().getX();
 			int dy = y - fox.getCoordinates().getY();
-			if (Math.abs(dx) >=Math.abs(dy) && dy >=0 && grid.getSquare(x, y-1) != null ){ 
-				bestSquare = grid.getSquare(x, y-1);
+			if (Math.abs(dx) >= Math.abs(dy) && dy >= 0
+					&& grid.getSquare(x, y - 1) != null) {
+				bestSquare = grid.getSquare(x, y - 1);
+			} else if (Math.abs(dx) >= Math.abs(dy) && dy <= 0
+					&& grid.getSquare(x, y + 1) != null) {
+				bestSquare = grid.getSquare(x, y + 1);
+			} else if (dx >= 0 && grid.getSquare(x - 1, y) != null) {
+				bestSquare = grid.getSquare(x - 1, y);
+			} else if (dx <= 0 && grid.getSquare(x + 1, y) != null) {
+				bestSquare = grid.getSquare(x + 1, y);
+			} else if (dy >= 0 && grid.getSquare(x, y - 1) != null) {
+				// not moving the most away from the fox but better than nothing
+				bestSquare = grid.getSquare(x, y - 1);
+			} else {
+				// might work, or might be null, but there's nothing else to do
+				bestSquare = grid.getSquare(x, y + 1);
 			}
-			else if (Math.abs(dx) >=Math.abs(dy) && dy <=0 && grid.getSquare(x, y+1) != null ){
-				bestSquare = grid.getSquare(x, y+1);
-			}
-			else if (dx >= 0 && grid.getSquare(x-1, y) != null){
-				bestSquare = grid.getSquare(x-1, y);
-			}
-			else if( dx <= 0 && grid.getSquare(x+1, y) != null ){
-				bestSquare = grid.getSquare(x+1, y);
-			}
-			else if (dy >= 0 && grid.getSquare(x, y-1) != null ) {
-				//not moving the most away from the fox but better than nothing
-				bestSquare = grid.getSquare(x, y-1);
-			}
-			else {
-				//might work, or might be null, but there's nothing else to do
-				bestSquare = grid.getSquare(x, y+1);
-			}
-		}
-		else {
-			//its safe so find some grass
+		} else {
+			// its safe so find some grass
 			bestSquare = grid.getSquare(x, y);
-			Coordinates[] directions = new Coordinates[] { new Coordinates(x+1, y), new Coordinates(x, y+1),
-				new Coordinates(x-1, y), new Coordinates(x, y-1)
-			};
-			for(Coordinates direction : directions) {
-				if(bestSquare == null || grid.getSquare(direction).getGrassHeight() > bestSquare.getGrassHeight()){
+			Coordinates[] directions = new Coordinates[] {
+					new Coordinates(x + 1, y), new Coordinates(x, y + 1),
+					new Coordinates(x - 1, y), new Coordinates(x, y - 1) };
+			GridSquareModel next = null;
+			for (Coordinates direction : directions) {
+				next = grid.getSquare(direction);
+				if (next != null
+						&& (bestSquare == null || (next.getGrassHeight() > bestSquare
+								.getGrassHeight()))) {
 					bestSquare = grid.getSquare(direction);
 				}
 			}
-			
+
 		}
 		grid.moveAgent(rabbit, bestSquare.getCoordinates());
 	}
@@ -329,8 +333,6 @@ public class SquareEcoSystem extends Environment {
 					Literal.parseLiteral("resource(grass," + direction + ")"));
 		}
 	}
-
-
 
 	private void updatePositionPercept(Agent agent) {
 		if (agent.getCoordinates().getX() > 0) {
@@ -356,7 +358,7 @@ public class SquareEcoSystem extends Environment {
 	 */
 	private boolean attack(String agent, String preyName) {
 		Fox fox = getFox(agent); // TODO allow for more than one fox!!
-		if(fox == null) {
+		if (fox == null) {
 			return false;
 		}
 		boolean result = false;
@@ -391,6 +393,10 @@ public class SquareEcoSystem extends Environment {
 
 	private boolean eatGrass(String agent) {
 		Rabbit rabbit = getRabbit(agent);
+		if (rabbit == null) {
+			logger.log(Level.SEVERE, "no rabbit of name " + agent + " found.");
+			return false;
+		}
 		logger.logp(Level.INFO, "SquareEcoSystem", "eatGrass",
 				"agent " + rabbit.getName() + " is attempting to eat grass at "
 						+ rabbit.getCoordinates());
@@ -422,10 +428,9 @@ public class SquareEcoSystem extends Environment {
 	private Agent getAgent(String agent) {
 		Agent foundAgent = null;
 		if (agent.contains("rabbit")) {
-			foundAgent =  getRabbit(agent);
-		}
-		else if(agent.contains("fox")) {
-			foundAgent =  getFox(agent);
+			foundAgent = getRabbit(agent);
+		} else if (agent.contains("fox")) {
+			foundAgent = getFox(agent);
 		}
 		return foundAgent;
 
@@ -447,7 +452,7 @@ public class SquareEcoSystem extends Environment {
 		}
 		return rabbit;
 	}
-	
+
 	/**
 	 * Finds the fox with the specified name if one exists
 	 * 
@@ -464,8 +469,7 @@ public class SquareEcoSystem extends Environment {
 		}
 		return fox;
 	}
-	
-	
+
 	/**
 	 * Check the agent can move in the specified direction then move it,
 	 * updating the agent's coordinates and the lists of agents on the

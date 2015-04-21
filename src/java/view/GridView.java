@@ -7,7 +7,6 @@ import javax.swing.JPanel;
 
 import events.UpdateListener;
 import model.GridModel;
-import model.GridRowModel;
 import model.GridSquareModel;
 import model.agents.Agent;
 
@@ -70,6 +69,7 @@ public class GridView extends JPanel implements UpdateListener {
 	public void modelUpdated() {
 		//TODO pobably doesnt even work because of multithreading
 		initialised = false;
+		repaint();
 	}
 
 }

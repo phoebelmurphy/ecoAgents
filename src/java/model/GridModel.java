@@ -2,6 +2,7 @@ package model;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.locks.ReentrantLock;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -216,6 +217,15 @@ public class GridModel {
 		return result;
 	}
 
+	/**
+	 * Finds the closest agent with the specified string
+	 *  in its name to the seeker's current location.
+	 * As agents will be moving around it could miss one.
+	 * I like to think of this as the target hiding.
+	 * @param seeker The agent doing the searching
+	 * @param target The type of agent being looked for
+	 * @return
+	 */
 	public Agent findClosest(Agent seeker, String target) {
 		//search current square
 		//get adjacent squares
@@ -227,12 +237,14 @@ public class GridModel {
 		Agent targetAgent = null;
 		while(targetAgent == null && !open.isEmpty()){
 			GridSquareModel currentSquare = open.remove(0);
+			currentSquare.lock();
 			List<Agent> agents = currentSquare.getAgents();
 			for(int i=0; i<agents.size() && targetAgent ==null; i++) {
 				if(agents.get(i).getName().contains(target)){
 					targetAgent = agents.get(i);
 				}
 			}
+			currentSquare.unlock();
 			if(targetAgent == null){
 				List<GridSquareModel> neighbours = getNeighbours(currentSquare.getCoordinates());
 				closed.add(currentSquare);
