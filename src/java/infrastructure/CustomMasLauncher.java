@@ -25,7 +25,7 @@ public class CustomMasLauncher extends CentralisedMASLauncherAnt {
 	
 	public static void main(String[] args){
 		mas2j masFile = null;
-		String name ="C:\\Users\\phoebe\\workspace\\ecoAgents\\ecoAgents.mas2j";
+		String name ="./ecoAgents.mas2j";
 		try {
 			masFile = new mas2j(new FileInputStream(name));
 
@@ -49,7 +49,6 @@ public class CustomMasLauncher extends CentralisedMASLauncherAnt {
 			File directory = file.getAbsoluteFile().getParentFile();
 			project.setDirectory(directory.toString());
 			project.setProjectFile(file);
-			//launcher = project.getInfrastructureFactory().createMASLauncher();
 			launcher.setProject(project);
 			launcher.writeScripts(false);
 
@@ -58,9 +57,6 @@ public class CustomMasLauncher extends CentralisedMASLauncherAnt {
 		}
 		// end of mas2j.java code
 
-//		if (launcher == null) {
-//			return;
-//		}
 		new Thread(launcher, "MAS-Launcher").start();
 	}
 	
@@ -86,7 +82,7 @@ public class CustomMasLauncher extends CentralisedMASLauncherAnt {
 	}
 
 	private String readAntFile() {
-		File file = new File("C:\\Users\\phoebe\\workspace\\ecoAgents\\src\\java\\infrastructure\\antscript.xml");
+		File file = new File("src/java/infrastructure/antscript.xml");
 		FileInputStream fis;
 		String str = null;
 		try {
@@ -96,10 +92,8 @@ public class CustomMasLauncher extends CentralisedMASLauncherAnt {
 			fis.close();
 			str  = new String(data, "UTF-8");
 		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return str;

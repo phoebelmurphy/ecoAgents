@@ -50,8 +50,7 @@ public class ButtonListener implements ActionListener, ChangeListener {
 	}
 
 	private void run() {
-		//TODO :(
-		RunCentralisedMAS mas = new RunCentralisedMAS(new String[] {"C:\\Users\\phoebe\\workspace\\ecoAgents\\ecoAgents.mas2j"});
+		RunCentralisedMAS mas = new RunCentralisedMAS(new String[] {"./ecoAgents.mas2j"});
 		new Thread(mas, "AgentSpeakSystem").start();
 
 	}
